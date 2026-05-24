@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Музыкальный проект — 68</title>
+    <title>Музыкальный проект — 68 (ТЕСТ)</title>
     <link rel="icon" type="image/png" href="https://github.com/geratiina/music-supabase/raw/main/avatar.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
@@ -135,89 +135,108 @@
             font-weight: bold;
             cursor: pointer;
         }
-        .player-card {
+        
+        /* НОВАЯ КАРТОЧКА ТРЕКА В СТИЛЕ ЯНДЕКС МУЗЫКИ */
+        .track-card {
+            display: flex;
+            gap: 1rem;
             background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            border-radius: 1.5rem;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: 0.2s;
-        }
-        .player-card:hover { background: rgba(0, 0, 0, 0.8); transform: translateY(-2px); }
-        .track-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-        .progress-area { margin: 0.5rem 0; }
-        .progress-bar-container {
-            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(8px);
             border-radius: 1rem;
-            height: 6px;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .track-card:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: translateY(-2px);
+        }
+        .track-cover {
+            width: 70px;
+            height: 70px;
+            border-radius: 0.6rem;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .track-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .track-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+        .track-artist {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+        .track-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .play-btn-small {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .like-btn-small {
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1.5rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .like-btn-small.liked {
+            background: #ef4444;
+            color: white;
+        }
+        .progress-small {
+            flex: 1;
+            min-width: 120px;
+        }
+        .progress-bar-small {
+            background: rgba(255,255,255,0.2);
+            border-radius: 1rem;
+            height: 4px;
             cursor: pointer;
         }
-        .progress-fill {
+        .progress-fill-small {
             background: linear-gradient(90deg, #3b82f6, #a855f7);
             border-radius: 1rem;
             height: 100%;
             width: 0%;
         }
-        .time-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: #cbd5e1;
-            margin-top: 0.2rem;
+        .time-small {
+            font-size: 0.6rem;
+            color: #a0aec0;
+            margin-left: 0.5rem;
         }
-        .controls-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 0.5rem;
-        }
-        .play-controls { display: flex; gap: 0.5rem; align-items: center; }
-        .play-btn {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        .volume-control {
-            background: rgba(0,0,0,0.5);
-            padding: 0.2rem 0.6rem;
-            border-radius: 2rem;
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-        }
-        .volume-slider { width: 60px; cursor: pointer; }
-        .like-btn {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(239,68,68,0.6);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        .like-btn.liked { background: #ef4444; color: white; }
-        .delete-track-btn {
+        .delete-track-btn-small {
             background: #ef4444;
             border: none;
             color: white;
-            padding: 0.3rem 0.7rem;
-            border-radius: 2rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
+        
         .comments-section { margin-top: 2rem; }
         .comments-section h2 {
             font-size: 1.3rem;
@@ -336,6 +355,12 @@
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
             .user-info { justify-content: center; }
+            .track-card { gap: 0.5rem; }
+            .track-cover { width: 50px; height: 50px; }
+            .track-title { font-size: 0.9rem; }
+            .track-artist { font-size: 0.7rem; }
+            .play-btn-small { width: 28px; height: 28px; font-size: 0.7rem; }
+            .progress-small { min-width: 80px; }
         }
     </style>
 </head>
@@ -351,7 +376,7 @@
         <div class="header-left">
             <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
             <div class="title-stats">
-                <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
+                <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68 (ТЕСТ)</h1>
                 <div class="stats" id="statsPanel">📊 загрузка...</div>
             </div>
         </div>
@@ -363,9 +388,11 @@
 </div>
 
 <div class="main-content">
+    <!-- АДМИН-ПАНЕЛЬ С РАЗДЕЛЬНЫМИ ПОЛЯМИ -->
     <div id="adminPanel" class="admin-panel" style="display: none;">
         <h2>➕ Добавить трек</h2>
         <input type="text" id="trackTitle" placeholder="Название трека">
+        <input type="text" id="trackArtist" placeholder="Исполнитель">
         <input type="text" id="trackUrl" placeholder="https://audio.jukehost.co.uk/...">
         <button id="addTrackBtn">Добавить</button>
         <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
@@ -499,6 +526,7 @@
         else register(email, pass);
     };
 
+    // ========== ЛАЙКИ ==========
     async function likeTrack(trackId) {
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
@@ -532,6 +560,7 @@
         }
     }
 
+    // ========== ОСНОВНАЯ ФУНКЦИЯ ЗАГРУЗКИ ТРЕКОВ (С КАРТОЧКАМИ) ==========
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
@@ -541,42 +570,117 @@
             updateStats(); 
             return;
         }
-        let html = '';
+        
         const fingerprint = await getDeviceFingerprint();
-        for (const track of data) {
-            let liked = false;
-            if (currentUser) {
-                const { data: likeData } = await supabaseClient.from('likes').select('id').eq('track_id', track.id).eq('user_id', currentUser.id).maybeSingle();
-                liked = !!likeData;
-            } else {
-                const { data: likeData } = await supabaseClient.from('likes').select('id').eq('track_id', track.id).eq('device_fingerprint', fingerprint).maybeSingle();
-                liked = !!likeData;
-            }
-            html += `<div class="player-card" data-track-id="${track.id}">
-                <div class="track-title">${escapeHtml(track.title)}</div>
-                <div class="progress-area">
-                    <div class="progress-bar-container"><div class="progress-fill"></div></div>
-                    <div class="time-info"><span class="current-time">00:00</span><span class="duration">00:00</span></div>
-                </div>
-                <div class="controls-area">
-                    <div class="play-controls">
-                        <button class="play-btn">▶</button>
-                        <div class="volume-control"><span>🔊</span><input type="range" class="volume-slider" min="0" max="100" value="70"></div>
-                    </div>
-                    <div style="display:flex; gap:0.5rem;">
-                        <button class="like-btn ${liked ? 'liked' : ''}" data-id="${track.id}" data-likes="${track.likes || 0}">👍 ${track.likes || 0}</button>
-                        ${isAdmin ? `<button class="delete-track-btn" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
-                    </div>
-                </div>
-                <audio style="display:none;"><source src="${track.file_url}" type="audio/mpeg"></audio>
-            </div>`;
+        let userLikes = [];
+        if (currentUser) {
+            const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('user_id', currentUser.id);
+            userLikes = likes.map(l => l.track_id);
+        } else {
+            const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('device_fingerprint', fingerprint);
+            userLikes = likes.map(l => l.track_id);
         }
-        container.innerHTML = html;
-        document.querySelectorAll('.player-card').forEach(card => initPlayer(card));
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.onclick = () => likeTrack(parseInt(btn.dataset.id));
+        
+        let html = '';
+        data.forEach((track, index) => {
+            const isLiked = userLikes.includes(track.id);
+            html += `
+                <div class="track-card" data-track-id="${track.id}">
+                    <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
+                    <div class="track-info">
+                        <div class="track-title">${escapeHtml(track.title)}</div>
+                        <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
+                        <div class="track-controls">
+                            <button class="play-btn-small" data-index="${index}">▶</button>
+                            <button class="like-btn-small ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
+                            <div class="progress-small">
+                                <div class="progress-bar-small">
+                                    <div class="progress-fill-small" id="progress-fill-${track.id}"></div>
+                                </div>
+                            </div>
+                            <span class="time-small" id="time-${track.id}">00:00 / 00:00</span>
+                            ${isAdmin ? `<button class="delete-track-btn-small" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
+                        </div>
+                    </div>
+                    <audio style="display:none;" id="audio-${track.id}" preload="metadata">
+                        <source src="${track.file_url}" type="audio/mpeg">
+                    </audio>
+                </div>
+            `;
         });
+        container.innerHTML = html;
+        
+        data.forEach((track, index) => {
+            initPlayerForTrack(track.id, index);
+        });
+        
+        document.querySelectorAll('.like-btn-small').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                likeTrack(parseInt(btn.dataset.id));
+            };
+        });
+        
         updateStats();
+    }
+    
+    function initPlayerForTrack(trackId, index) {
+        const audio = document.getElementById(`audio-${trackId}`);
+        const playBtn = document.querySelector(`.play-btn-small[data-index="${index}"]`);
+        const progressBar = document.querySelector(`#progress-fill-${trackId}`)?.parentElement;
+        const progressFill = document.querySelector(`#progress-fill-${trackId}`);
+        const timeSpan = document.getElementById(`time-${trackId}`);
+        
+        if (!audio || !playBtn) return;
+        
+        let isPlaying = false;
+        
+        audio.addEventListener('loadedmetadata', () => {
+            updateTimeDisplay();
+        });
+        
+        audio.addEventListener('timeupdate', () => {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            if (progressFill) progressFill.style.width = `${percent}%`;
+            updateTimeDisplay();
+        });
+        
+        function updateTimeDisplay() {
+            if (timeSpan) {
+                timeSpan.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+            }
+        }
+        
+        if (progressBar) {
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                audio.currentTime = percent * audio.duration;
+            });
+        }
+        
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶';
+            } else {
+                document.querySelectorAll('audio').forEach(a => {
+                    if (a !== audio && !a.paused) {
+                        a.pause();
+                        const btn = document.querySelector(`.play-btn-small[data-audio-id="${a.id}"]`);
+                        if (btn) btn.textContent = '▶';
+                    }
+                });
+                audio.play();
+                playBtn.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        });
+        
+        audio.addEventListener('ended', () => {
+            playBtn.textContent = '▶';
+            isPlaying = false;
+        });
     }
 
     async function deleteTrack(id) {
@@ -587,14 +691,20 @@
         }
     }
 
-    async function addTrack(title, url) {
+    async function addTrack(title, artist, url) {
         if (!isAdmin) return alert('⛔ Только админ');
-        if (!title.trim() || !url.trim()) return alert('Заполните все поля');
-        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), file_url: url.trim(), likes: 0 }]);
+        if (!title.trim() || !artist.trim() || !url.trim()) return alert('Заполните все поля');
+        const { error } = await supabaseClient.from('tracks').insert([{ 
+            title: title.trim(), 
+            artist: artist.trim(),
+            file_url: url.trim(), 
+            likes: 0 
+        }]);
         if (error) alert('Ошибка: ' + error.message);
         else {
             alert('✅ Трек добавлен');
             document.getElementById('trackTitle').value = '';
+            document.getElementById('trackArtist').value = '';
             document.getElementById('trackUrl').value = '';
             loadTracks();
         }
@@ -636,56 +746,6 @@
         document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
     }
 
-    function initPlayer(card) {
-        const audio = card.querySelector('audio');
-        const playBtn = card.querySelector('.play-btn');
-        const progressBar = card.querySelector('.progress-bar-container');
-        const progressFill = card.querySelector('.progress-fill');
-        const currentSpan = card.querySelector('.current-time');
-        const durationSpan = card.querySelector('.duration');
-        const volumeSlider = card.querySelector('.volume-slider');
-        let isPlaying = false;
-
-        audio.addEventListener('loadedmetadata', () => {
-            durationSpan.textContent = formatTime(audio.duration);
-        });
-        audio.addEventListener('timeupdate', () => {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progressFill.style.width = `${percent}%`;
-            currentSpan.textContent = formatTime(audio.currentTime);
-        });
-        progressBar.addEventListener('click', (e) => {
-            const rect = progressBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            audio.currentTime = percent * audio.duration;
-        });
-        playBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-                playBtn.textContent = '▶';
-            } else {
-                document.querySelectorAll('.player-card audio').forEach(a => {
-                    if (a !== audio && !a.paused) {
-                        a.pause();
-                        const otherCard = a.closest('.player-card');
-                        if (otherCard) otherCard.querySelector('.play-btn').textContent = '▶';
-                    }
-                });
-                audio.play();
-                playBtn.textContent = '⏸';
-            }
-            isPlaying = !isPlaying;
-        });
-        audio.addEventListener('ended', () => {
-            playBtn.textContent = '▶';
-            isPlaying = false;
-        });
-        volumeSlider.addEventListener('input', (e) => {
-            audio.volume = e.target.value / 100;
-        });
-        audio.volume = 0.7;
-    }
-
     function formatTime(sec) { 
         if (isNaN(sec)) return '00:00'; 
         const m = Math.floor(sec / 60); 
@@ -698,7 +758,11 @@
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
     }
 
-    document.getElementById('addTrackBtn').onclick = () => addTrack(document.getElementById('trackTitle').value, document.getElementById('trackUrl').value);
+    document.getElementById('addTrackBtn').onclick = () => addTrack(
+        document.getElementById('trackTitle').value,
+        document.getElementById('trackArtist').value,
+        document.getElementById('trackUrl').value
+    );
     document.getElementById('sendCommentBtn').onclick = () => addComment(document.getElementById('commentInput').value);
     document.getElementById('commentInput').addEventListener('input', function() { 
         const len = this.value.length; 
