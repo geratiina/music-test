@@ -970,11 +970,11 @@
     
     <div id="artistsTab" class="tab-content active">
         <div id="authorList" class="author-list">
-            <div class="author-item" onclick="showSingerCard('Андрей Тришин', 'Андрей Тришин - тексты, мелодии, вокал. Участник проекта "АБТ". P.S. Выражаю особую благодарность музыкантам из команды "Проект GK" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову (гитара) за помощь в создании песни "Мама"!', 'https://github.com/geratiina/singers/raw/main/AndrayT.jpg')">
+            <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову (гитара) за помощь в создании песни \"Мама\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg")'>
                 <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
                 <div class="author-name">Андрей Тришин</div>
             </div>
-            <div class="author-item" onclick="showSingerCard('Алексей Тамарёв', 'Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта "АБТ".', 'https://github.com/geratiina/singers/raw/main/AlexeyT.jpg')">
+            <div class="author-item" onclick="showSingerCard('Алексей Тамарёв', 'Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".', 'https://github.com/geratiina/singers/raw/main/AlexeyT.jpg')">
                 <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
                 <div class="author-name">Алексей Тамарёв</div>
             </div>
@@ -997,7 +997,6 @@
     </div>
 </div>
 
-<!-- Модальное окно для исполнителя -->
 <div id="singerModal" class="modal">
     <div class="modal-content">
         <button class="close-modal" onclick="closeSingerModal()">✕</button>
@@ -1007,7 +1006,6 @@
     </div>
 </div>
 
-<!-- Модальное окно для видео -->
 <div id="videoModal" class="modal">
     <div class="modal-content video-modal">
         <button class="close-modal" onclick="closeVideoPlayer()">✕</button>
@@ -1483,13 +1481,24 @@
         modal.style.display = 'flex';
         const authorMenu = document.getElementById('authorMenu');
         if (authorMenu.classList.contains('open')) authorMenu.classList.remove('open');
-        video.play();
+        
+        // Автовоспроизведение с правильной обработкой Promise
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log('Автовоспроизведение заблокировано:', error);
+                // Не показываем ошибку пользователю, просто ждём его клика
+            });
+        }
     }
 
     function closeVideoPlayer() {
         const modal = document.getElementById('videoModal');
         const video = document.getElementById('videoPlayer');
-        video.pause();
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+        }
         modal.style.display = 'none';
     }
 
