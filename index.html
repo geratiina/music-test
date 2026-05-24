@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
-        /* Стили такие же, как в предыдущей версии (опущены для краткости) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         .video-background {
@@ -1028,34 +1027,40 @@
         
         console.log('Загрузка комментариев...');
         
-        const { data, error } = await supabaseClient
+        const { data: comments, error: commentsError } = await supabaseClient
             .from('comments')
-            .select(`
-                id,
-                text,
-                created_at,
-                user_id,
-                profiles:user_id (username, role)
-            `)
+            .select('id, text, created_at, user_id')
             .order('created_at', { ascending: false });
         
-        if (error) {
-            console.error('Ошибка загрузки комментариев:', error);
+        if (commentsError) {
+            console.error('Ошибка загрузки комментариев:', commentsError);
             container.innerHTML = '<div class="empty-message">❌ Ошибка загрузки</div>';
             return;
         }
         
-        if (!data || data.length === 0) {
+        if (!comments || comments.length === 0) {
             container.innerHTML = '';
             return;
         }
         
-        console.log('Загружено комментариев:', data.length);
+        const userIds = [...new Set(comments.map(c => c.user_id).filter(id => id))];
+        
+        let profilesMap = {};
+        if (userIds.length > 0) {
+            const { data: profiles, error: profilesError } = await supabaseClient
+                .from('profiles')
+                .select('id, username, role')
+                .in('id', userIds);
+            
+            if (!profilesError && profiles) {
+                profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+            }
+        }
         
         let html = '';
-        for (const comment of data) {
+        for (const comment of comments) {
             let authorName = 'Гость';
-            const profile = comment.profiles;
+            const profile = profilesMap[comment.user_id];
             
             if (profile) {
                 if (profile.role === 'admin' || profile.role === 'tech_admin') {
