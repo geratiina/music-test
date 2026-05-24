@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
+        /* ... (стили такие же, как в прошлый раз, без изменений) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         .video-background {
@@ -426,7 +427,6 @@
         .tg-btn { background: rgba(0, 136, 204, 0.9); }
         .empty-message { text-align: center; padding: 2rem; color: white; }
 
-        /* МОДАЛЬНОЕ ОКНО С ИСПРАВЛЕННЫМИ ПОЛЯМИ */
         .modal {
             display: none;
             position: fixed;
@@ -473,7 +473,6 @@
             background: #ef4444;
         }
         
-        /* СТИЛИ ДЛЯ ПОЛЯ ПАРОЛЯ С ГЛАЗИКОМ */
         .password-wrapper {
             position: relative;
             width: 100%;
@@ -638,7 +637,6 @@
         return regex.test(username);
     }
 
-    // Функция переключения видимости пароля (без обезьяны)
     function togglePassword(inputId, element) {
         const input = document.getElementById(inputId);
         if (input.type === 'password') {
@@ -768,19 +766,43 @@
         else register(email, pass, username);
     };
 
+    // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ЛАЙКА ==========
     async function likeTrack(trackId) {
+        console.log('Лайк трека:', trackId);
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
+        
+        // Проверяем, есть ли уже лайк
+        let query = supabaseClient
+            .from('likes')
+            .select('id')
+            .eq('track_id', trackId);
+        
+        if (userId) {
+            query = query.eq('user_id', userId);
+        } else {
+            query = query.eq('device_fingerprint', fingerprint);
+        }
+        
+        const { data: existing } = await query.maybeSingle();
+        
+        if (existing) {
+            alert('Вы уже лайкали этот трек');
+            return;
+        }
+        
         const { error } = await supabaseClient.from('likes').insert({
             track_id: trackId,
             user_id: userId,
             device_fingerprint: userId ? null : fingerprint
         });
+        
         if (error) {
-            if (error.message.includes('unique')) alert('Вы уже лайкали этот трек');
-            else alert('Ошибка: ' + error.message);
+            console.error('Ошибка лайка:', error);
+            alert('Ошибка: ' + error.message);
         } else {
-            loadTracks();
+            console.log('Лайк успешно поставлен');
+            loadTracks(); // Обновляем треки
         }
     }
 
