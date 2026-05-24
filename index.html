@@ -242,20 +242,32 @@
             transform: scale(1.08);
         }
         
-        .mobile-social {
+        /* МОБИЛЬНЫЕ СОЦ. КНОПКИ (под шапкой, без подложки) */
+        .mobile-social-bar {
             display: none;
             justify-content: center;
             gap: 1rem;
-            margin: 1.5rem 0;
-            padding: 0.8rem;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            border-radius: 2rem;
+            margin: 0 0 1rem 0;
+            padding: 0;
         }
-        .mobile-social .social-icon {
-            width: 48px;
-            height: 48px;
-            font-size: 1rem;
+        .mobile-social-bar .social-icon-small {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .mobile-social-bar .social-icon-small.vk {
+            background: #0077FF;
+        }
+        .mobile-social-bar .social-icon-small.tg {
+            background: #26A5E4;
+        }
+        .mobile-social-bar .social-icon-small:hover {
+            transform: scale(1.05);
         }
         
         .author-menu {
@@ -804,32 +816,14 @@
             
             .site-wrapper { flex-direction: column; gap: 0; }
             .ad-sidebar { display: none; }
-            .mobile-ad { display: block; }
             .main-content { max-width: 100%; }
             
-            /* Скрываем соц. кнопки из шапки на мобильных */
-            .social-header {
-                display: none;
-            }
-            
-            /* Показываем соц. кнопки между треками и комментариями */
-            .mobile-social {
+            /* Показываем мобильные соц. кнопки под шапкой */
+            .mobile-social-bar {
                 display: flex;
             }
             
-            /* Шапка: без бургера, только аватар + название */
-            .glass-header {
-                padding: 0.6rem 1rem;
-                justify-content: center;
-            }
-            .header-left {
-                justify-content: center;
-                gap: 0.3rem;
-            }
-            .age-restriction { font-size: 0.6rem; padding: 0.15rem 0.3rem; }
-            .avatar { width: 36px; height: 36px; }
-            h1 { font-size: 0.85rem; }
-            .stats { font-size: 0.5rem; padding: 0.1rem 0.5rem; }
+            /* Шапка остается как есть, без изменений */
             
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
@@ -921,6 +915,20 @@
             </div>
         </div>
         
+        <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (под шапкой, без подложки) -->
+        <div class="mobile-social-bar">
+            <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon-small vk">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10zM8 9h2.5v6H8V9zm5.5 0H16v3.5c0 .83-.67 1.5-1.5 1.5h-1v-5z"/>
+                </svg>
+            </a>
+            <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon-small tg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z"/>
+                </svg>
+            </a>
+        </div>
+        
         <div class="mobile-ad ad-block">
             <p>📢 Здесь могла быть ваша реклама</p>
             <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
@@ -936,16 +944,6 @@
         </div>
         
         <div id="trackList" class="track-list"></div>
-        
-        <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (между треками и комментариями) -->
-        <div class="mobile-social">
-            <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon vk">VK</a>
-            <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon tg">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z" fill="white"/>
-                </svg>
-            </a>
-        </div>
         
         <div class="comments-section">
             <h2>💬 Комментарии</h2>
@@ -972,12 +970,12 @@
     </div>
     
     <div id="artistsList" class="author-list">
-        <!-- Андрей Тришин – обновленная аватарка -->
-        <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "АБТ")'>
+        <!-- Андрей Тришин – убрана надпись АБТ -->
+        <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Андрей Тришин</div>
         </div>
-        <!-- Алексей Тамарёв – без инициалов "АТ" -->
+        <!-- Алексей Тамарёв – без инициалов -->
         <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Алексей Тамарёв</div>
@@ -1464,7 +1462,7 @@
         else counter.classList.remove('warning');
     });
 
-    // Управление бургер-меню через новую кнопку
+    // Управление бургер-меню
     const burgerBtn = document.getElementById('burgerMenuFixed');
     const authorMenuElem = document.getElementById('authorMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
