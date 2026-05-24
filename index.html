@@ -539,7 +539,7 @@
         <h2 id="modalTitle">Вход</h2>
         <input type="email" id="authEmail" placeholder="Email">
         <input type="password" id="authPassword" placeholder="Пароль">
-        <input type="text" id="authUsername" placeholder="Логин (только латиница, до 8 символов)" style="display: none;">
+        <input type="text" id="authUsername" placeholder="Логин (только латиница, до 8 символов)">
         <button id="submitAuthBtn">Войти</button>
         <button class="close" onclick="closeModal()">Закрыть</button>
         <div class="switch-form" onclick="toggleAuthForm()">Нет аккаунта? Зарегистрироваться</div>
@@ -590,7 +590,8 @@
                 .select('role, email, username')
                 .eq('id', user.id)
                 .single();
-            isAdmin = profile?.role === 'admin';
+            // Админские права: роль admin или tech_admin
+            isAdmin = profile?.role === 'admin' || profile?.role === 'tech_admin';
             const displayName = profile?.username || profile?.email || user.email;
             document.getElementById('userEmail').innerText = displayName;
             document.getElementById('authBtn').innerText = 'Выйти';
@@ -614,13 +615,21 @@
         checkAuth();
     }
 
+    // ========== РЕГИСТРАЦИЯ С ОБЯЗАТЕЛЬНЫМ ЛОГИНОМ ==========
     async function register(email, password, username) {
+        // Логин обязателен
+        if (!username || username.trim() === '') {
+            alert('Логин обязателен для заполнения');
+            return;
+        }
+        
+        // Проверяем логин
         if (!isValidUsername(username)) {
             alert('Логин должен содержать только латинские буквы (A-Z) и быть не длиннее 8 символов');
             return;
         }
         
-        // Проверяем, не занят ли логин
+        // Проверяем уникальность логина
         const { data: existing } = await supabaseClient
             .from('profiles')
             .select('username')
@@ -632,6 +641,7 @@
             return;
         }
         
+        // Регистрация пользователя
         const { data, error } = await supabaseClient.auth.signUp({ 
             email, 
             password,
@@ -642,7 +652,6 @@
         
         if (error) return alert('Ошибка регистрации: ' + error.message);
         
-        // После регистрации обновляем профиль с логином
         if (data.user) {
             const { error: updateError } = await supabaseClient
                 .from('profiles')
@@ -666,8 +675,10 @@
         const usernameField = document.getElementById('authUsername');
         if (currentAuthMode === 'register') {
             usernameField.style.display = 'block';
+            usernameField.placeholder = 'Логин (обязательно, только латиница, до 8 символов)';
         } else {
-            usernameField.style.display = 'none';
+            usernameField.style.display = 'block';
+            usernameField.placeholder = 'Логин';
         }
     }
     function closeModal() { modal.style.display = 'none'; }
@@ -682,13 +693,13 @@
             title.innerText = 'Регистрация';
             submitBtn.innerText = 'Зарегистрироваться';
             switchText.innerText = 'Уже есть аккаунт? Войти';
-            usernameField.style.display = 'block';
+            usernameField.placeholder = 'Логин (обязательно, только латиница, до 8 символов)';
         } else {
             currentAuthMode = 'login';
             title.innerText = 'Вход';
             submitBtn.innerText = 'Войти';
             switchText.innerText = 'Нет аккаунта? Зарегистрироваться';
-            usernameField.style.display = 'none';
+            usernameField.placeholder = 'Логин';
         }
     }
 
@@ -699,13 +710,10 @@
     document.getElementById('submitAuthBtn').onclick = () => {
         const email = document.getElementById('authEmail').value;
         const pass = document.getElementById('authPassword').value;
-        if (!email || !pass) return alert('Заполните поля');
+        const username = document.getElementById('authUsername').value;
+        if (!email || !pass) return alert('Заполните email и пароль');
         if (currentAuthMode === 'login') login(email, pass);
-        else {
-            const username = document.getElementById('authUsername').value;
-            if (!username) return alert('Введите логин');
-            register(email, pass, username);
-        }
+        else register(email, pass, username);
     };
 
     async function likeTrack(trackId) {
@@ -724,7 +732,7 @@
         }
     }
 
-    // ========== КОММЕНТАРИИ (С ЗАМЕНОЙ ПОЧТЫ АДМИНА НА "Админ" КРАСНЫМ) ==========
+    // ========== КОММЕНТАРИИ (ТЕХ-АДМИН КРАСНЫМ) ==========
     async function loadComments() {
         const container = document.getElementById('commentsList');
         if (!container) return;
@@ -750,7 +758,6 @@
         let html = '';
         for (const comment of data) {
             let authorName = 'Гость';
-            let authorColor = '';
             if (comment.user_id) {
                 const { data: profile } = await supabaseClient
                     .from('profiles')
@@ -758,8 +765,9 @@
                     .eq('id', comment.user_id)
                     .single();
                 if (profile) {
-                    if (profile.role === 'admin') {
-                        authorName = '<span style="color: #ef4444; font-weight: bold;">Админ</span>';
+                    // Если роль admin или tech_admin — показываем "Тех-Админ"
+                    if (profile.role === 'admin' || profile.role === 'tech_admin') {
+                        authorName = '<span style="color: #ef4444; font-weight: bold;">Тех-Админ</span>';
                     } else {
                         authorName = profile.username || profile.email;
                     }
