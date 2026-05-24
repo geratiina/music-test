@@ -762,23 +762,18 @@
     let deviceFingerprint = null;
     let currentAuthMode = 'login';
 
-    // ========== РАСШИРЕННАЯ ЦЕНЗУРА ==========
+    // ========== ЦЕНЗУРА ==========
     const bannedWords = [
-        'хуй', 'xуй', 'хуя', 'хую', 'хуём', 'хуе', 'хуев', 'хуёв', 'хуи', 'хуйня', 'хуйло',
-        'пизда', 'пизду', 'пизде', 'пиздой', 'пизды', 'пизд', 'пизж', 'пиздюк',
-        'блядь', 'бля', 'бляд', 'блять', 'бляха', 'блядский',
-        'ебать', 'ебаный', 'ебанный', 'ебучий', 'ебал', 'ебало', 'еблан', 'ебло',
-        'залупа', 'пидор', 'пидорас', 'гандон', 'мудак', 'мудила', 'сука', 'сучка',
-        'шлюха', 'курва', 'нахуй', 'похуй', 'дохуя', 'долбоеб', 'дебил', 'идиот', 'урод',
-        'fuck', 'shit', 'bitch', 'asshole', 'cunt', 'dick', 'pussy', 'whore', 'slut',
-        'hui', 'huy', 'pizda', 'pizdec', 'blya', 'ebat', 'suka'
+        'хуй', 'xуй', 'хуя', 'хую', 'хуём', 'хуе', 'пизда', 'пизду', 'пизде', 'блядь', 'бля', 'блять',
+        'ебать', 'ебаный', 'ебанный', 'еблан', 'пидор', 'пидорас', 'гандон', 'мудак', 'сука', 'сучка',
+        'шлюха', 'курва', 'нахуй', 'похуй', 'долбоеб', 'дебил', 'идиот', 'fuck', 'shit', 'bitch', 'asshole', 'cunt', 'dick', 'pussy', 'whore', 'slut'
     ];
     
     function containsBadWords(text) {
         if (!text) return false;
         let lowerText = text.toLowerCase();
         for (const word of bannedWords) {
-            if (lowerText.includes(word.toLowerCase())) return true;
+            if (lowerText.includes(word)) return true;
         }
         return false;
     }
@@ -932,3 +927,458 @@
         if (existing) {
             alert('❌ Этот логин уже занят. Придумайте другой.');
             return;
+        }
+        
+        const { data, error } = await supabaseClient.auth.signUp({ 
+            email, 
+            password,
+            options: { data: { username: username } }
+        });
+        
+        if (error) {
+            if (error.message.includes('User already registered')) {
+                alert('❌ Пользователь с таким email уже зарегистрирован');
+            } else {
+                alert('Ошибка регистрации: ' + error.message);
+            }
+            return;
+        }
+        
+        if (data.user) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            const { error: updateError } = await supabaseClient
+                .from('profiles')
+                .update({ username: username })
+                .eq('id', data.user.id);
+            
+            if (updateError && updateError.message.includes('no rows')) {
+                await supabaseClient.from('profiles').insert({
+                    id: data.user.id,
+                    email: email,
+                    username: username,
+                    role: 'user'
+                });
+            }
+        }
+        
+        alert('✅ Регистрация успешна! Теперь войдите.');
+        toggleToLogin();
+    }
+
+    function logout() {
+        supabaseClient.auth.signOut();
+        checkAuth();
+    }
+
+    const modal = document.getElementById('authModal');
+    function openModal() { modal.style.display = 'flex'; }
+    function closeModal() { modal.style.display = 'none'; }
+    function toggleToLogin() {
+        currentAuthMode = 'login';
+        document.getElementById('modalTitle').innerText = 'Вход';
+        document.getElementById('submitAuthBtn').innerText = 'Войти';
+        document.getElementById('authUsername').style.display = 'none';
+    }
+
+    document.getElementById('loginBtn').onclick = () => {
+        currentAuthMode = 'login';
+        document.getElementById('modalTitle').innerText = 'Вход';
+        document.getElementById('submitAuthBtn').innerText = 'Войти';
+        document.getElementById('authUsername').style.display = 'none';
+        openModal();
+    };
+
+    document.getElementById('registerBtn').onclick = () => {
+        currentAuthMode = 'register';
+        document.getElementById('modalTitle').innerText = 'Регистрация';
+        document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
+        document.getElementById('authUsername').style.display = 'block';
+        document.getElementById('authUsername').placeholder = 'Логин (только латиница, 3-8 символов)';
+        openModal();
+    };
+
+    document.getElementById('logoutBtn').onclick = () => {
+        logout();
+    };
+
+    document.getElementById('submitAuthBtn').onclick = () => {
+        const email = document.getElementById('authEmail').value;
+        const pass = document.getElementById('authPassword').value;
+        const username = document.getElementById('authUsername').value;
+        if (!email || !pass) return alert('Заполните email и пароль');
+        if (currentAuthMode === 'login') login(email, pass);
+        else register(email, pass, username);
+    };
+
+    async function likeTrack(trackId) {
+        console.log('Лайк трека:', trackId);
+        const fingerprint = await getDeviceFingerprint();
+        const userId = currentUser?.id || null;
+        
+        let query = supabaseClient
+            .from('likes')
+            .select('id')
+            .eq('track_id', trackId);
+        
+        if (userId) {
+            query = query.eq('user_id', userId);
+        } else {
+            query = query.eq('device_fingerprint', fingerprint);
+        }
+        
+        const { data: existing } = await query.maybeSingle();
+        
+        if (existing) {
+            const { error } = await supabaseClient
+                .from('likes')
+                .delete()
+                .eq('id', existing.id);
+            
+            if (error) {
+                console.error('Ошибка удаления лайка:', error);
+                alert('Ошибка: ' + error.message);
+            } else {
+                console.log('Лайк удалён');
+                loadTracks();
+            }
+        } else {
+            const { error } = await supabaseClient.from('likes').insert({
+                track_id: trackId,
+                user_id: userId,
+                device_fingerprint: userId ? null : fingerprint
+            });
+            
+            if (error) {
+                console.error('Ошибка добавления лайка:', error);
+                alert('Ошибка: ' + error.message);
+            } else {
+                console.log('Лайк добавлен');
+                loadTracks();
+            }
+        }
+    }
+
+    // ========== КОММЕНТАРИИ ==========
+    async function loadComments() {
+        const container = document.getElementById('commentsList');
+        if (!container) return;
+        
+        const { data: comments, error: commentsError } = await supabaseClient
+            .from('comments')
+            .select('id, text, created_at, user_id')
+            .order('created_at', { ascending: false });
+        
+        if (commentsError) {
+            console.error('Ошибка загрузки комментариев:', commentsError);
+            container.innerHTML = '';
+            return;
+        }
+        
+        if (!comments || comments.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+        
+        const userIds = [...new Set(comments.map(c => c.user_id).filter(id => id))];
+        
+        let profilesMap = {};
+        if (userIds.length > 0) {
+            const { data: profiles, error: profilesError } = await supabaseClient
+                .from('profiles')
+                .select('id, username, role')
+                .in('id', userIds);
+            
+            if (!profilesError && profiles) {
+                profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+            }
+        }
+        
+        let html = '';
+        for (const comment of comments) {
+            let authorName = 'Гость';
+            const profile = profilesMap[comment.user_id];
+            
+            if (profile) {
+                if (profile.role === 'admin' || profile.role === 'tech_admin') {
+                    authorName = '<span style="color: #ef4444; font-weight: bold;">Тех-Админ</span>';
+                } else if (profile.username) {
+                    authorName = profile.username;
+                } else {
+                    authorName = 'Пользователь';
+                }
+            }
+            
+            html += `
+                <div class="comment">
+                    <div class="comment-content">
+                        <div>
+                            <span class="comment-author">💬 ${authorName}</span>
+                            <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                    </div>
+                    ${isAdmin ? `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">🗑️</button>` : ''}
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+    }
+
+    async function addComment(text) {
+        if (!currentUser) return alert('Войдите в аккаунт, чтобы комментировать');
+        if (!text.trim()) return alert('Напишите что-нибудь');
+        if (text.length > 250) return alert('Максимум 250 символов');
+        
+        if (containsBadWords(text)) {
+            alert('❌ Комментарий содержит недопустимые слова. Пожалуйста, перепишите его.');
+            return;
+        }
+        
+        const { data, error } = await supabaseClient.from('comments').insert({
+            text: text.trim(),
+            user_id: currentUser.id
+        }).select();
+        
+        if (error) {
+            console.error('Ошибка добавления комментария:', error);
+            alert('Ошибка: ' + error.message);
+        } else {
+            document.getElementById('commentInput').value = '';
+            document.getElementById('charCounter').innerText = '0 / 250';
+            alert('✅ Комментарий добавлен');
+            loadComments();
+        }
+    }
+
+    async function deleteComment(id) {
+        if (!isAdmin) return;
+        if (confirm('Удалить комментарий?')) {
+            await supabaseClient.from('comments').delete().eq('id', id);
+            loadComments();
+        }
+    }
+
+    // ========== ТРЕКИ ==========
+    async function loadTracks() {
+        const container = document.getElementById('trackList');
+        container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
+        const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
+        if (error || !data?.length) {
+            container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
+            updateStats(); 
+            return;
+        }
+        
+        const fingerprint = await getDeviceFingerprint();
+        let userLikes = [];
+        if (currentUser) {
+            const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('user_id', currentUser.id);
+            userLikes = likes.map(l => l.track_id);
+        } else {
+            const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('device_fingerprint', fingerprint);
+            userLikes = likes.map(l => l.track_id);
+        }
+        
+        let html = '';
+        for (let i = 0; i < data.length; i++) {
+            const track = data[i];
+            const isLiked = userLikes.includes(track.id);
+            
+            const { count: likesCount } = await supabaseClient
+                .from('likes')
+                .select('*', { count: 'exact', head: true })
+                .eq('track_id', track.id);
+            
+            html += `
+                <div class="track-card" data-track-id="${track.id}" data-index="${i}">
+                    <div class="track-left">
+                        <div class="cover-container">
+                            <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
+                            <div class="play-overlay" data-play-index="${i}">
+                                <span>▶</span>
+                            </div>
+                        </div>
+                        <div class="track-duration" id="duration-${track.id}">--:--</div>
+                    </div>
+                    <div class="track-right">
+                        <div class="track-title">${escapeHtml(track.title)}</div>
+                        <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
+                        <div class="volume-control" id="volume-${track.id}">
+                            <span class="volume-icon">🔊</span>
+                            <input type="range" class="volume-slider" min="0" max="100" value="70">
+                        </div>
+                        <div class="progress-control" id="progress-${track.id}">
+                            <div class="progress-bar-container">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="likes-row">
+                            <a href="${track.file_url}" download="${escapeHtml(track.title)}.mp3" class="download-track-btn">⬇️ Скачать</a>
+                            <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${likesCount || 0}</button>
+                            ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
+                        </div>
+                    </div>
+                    <audio style="display:none;" id="audio-${track.id}" preload="metadata">
+                        <source src="${track.file_url}" type="audio/mpeg">
+                    </audio>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        
+        for (let i = 0; i < data.length; i++) {
+            initPlayerForTrack(data[i].id, i);
+        }
+        
+        document.querySelectorAll('.like-btn-card').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                likeTrack(parseInt(btn.dataset.id));
+            };
+        });
+        
+        updateStats();
+    }
+    
+    function initPlayerForTrack(trackId, index) {
+        const audio = document.getElementById(`audio-${trackId}`);
+        const playBtn = document.querySelector(`.play-overlay[data-play-index="${index}"]`);
+        const durationSpan = document.getElementById(`duration-${trackId}`);
+        const volumeControl = document.getElementById(`volume-${trackId}`);
+        const progressControl = document.getElementById(`progress-${trackId}`);
+        const progressFill = progressControl?.querySelector('.progress-fill');
+        const progressBar = progressControl?.querySelector('.progress-bar-container');
+        const volumeSlider = volumeControl?.querySelector('.volume-slider');
+        const volumeIcon = volumeControl?.querySelector('.volume-icon');
+        
+        if (!audio || !playBtn) return;
+        
+        let isPlaying = false;
+        
+        audio.addEventListener('loadedmetadata', () => {
+            if (durationSpan && !isNaN(audio.duration)) {
+                const mins = Math.floor(audio.duration / 60);
+                const secs = Math.floor(audio.duration % 60);
+                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+        });
+        
+        audio.addEventListener('timeupdate', () => {
+            if (isPlaying && progressFill && audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = `${percent}%`;
+            }
+        });
+        
+        if (progressBar) {
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                audio.currentTime = percent * audio.duration;
+            });
+        }
+        
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerHTML = '<span>▶</span>';
+                if (volumeControl) volumeControl.classList.remove('visible');
+                if (progressControl) progressControl.classList.remove('visible');
+            } else {
+                document.querySelectorAll('audio').forEach(a => {
+                    if (a !== audio && !a.paused) {
+                        a.pause();
+                        const idx = a.id?.replace('audio-', '');
+                        const otherPlayBtn = document.querySelector(`.play-overlay[data-play-index="${idx}"]`);
+                        if (otherPlayBtn) otherPlayBtn.innerHTML = '<span>▶</span>';
+                        const otherVolume = document.getElementById(`volume-${idx}`);
+                        const otherProgress = document.getElementById(`progress-${idx}`);
+                        if (otherVolume) otherVolume.classList.remove('visible');
+                        if (otherProgress) otherProgress.classList.remove('visible');
+                    }
+                });
+                audio.play();
+                playBtn.innerHTML = '<span>⏸</span>';
+                if (volumeControl) volumeControl.classList.add('visible');
+                if (progressControl) progressControl.classList.add('visible');
+            }
+            isPlaying = !isPlaying;
+        });
+        
+        audio.addEventListener('ended', () => {
+            playBtn.innerHTML = '<span>▶</span>';
+            if (volumeControl) volumeControl.classList.remove('visible');
+            if (progressControl) progressControl.classList.remove('visible');
+            isPlaying = false;
+        });
+        
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                audio.volume = e.target.value / 100;
+                if (volumeIcon) {
+                    if (audio.volume === 0) volumeIcon.textContent = '🔇';
+                    else if (audio.volume < 0.5) volumeIcon.textContent = '🔉';
+                    else volumeIcon.textContent = '🔊';
+                }
+            });
+            audio.volume = 0.7;
+        }
+    }
+
+    async function deleteTrack(id) {
+        if (!isAdmin) return;
+        if (confirm('Удалить трек?')) {
+            await supabaseClient.from('tracks').delete().eq('id', id);
+            loadTracks();
+        }
+    }
+
+    async function addTrack(title, artist, url) {
+        if (!isAdmin) return alert('⛔ Только админ');
+        if (!title.trim() || !artist.trim() || !url.trim()) return alert('Заполните все поля');
+        const { error } = await supabaseClient.from('tracks').insert([{ 
+            title: title.trim(), 
+            artist: artist.trim(),
+            file_url: url.trim(), 
+            likes: 0 
+        }]);
+        if (error) alert('Ошибка: ' + error.message);
+        else {
+            alert('✅ Трек добавлен');
+            document.getElementById('trackTitle').value = '';
+            document.getElementById('trackArtist').value = '';
+            document.getElementById('trackUrl').value = '';
+            loadTracks();
+        }
+    }
+
+    async function updateStats() {
+        const { count: tracksCount } = await supabaseClient.from('tracks').select('*', { count: 'exact', head: true });
+        const { count: commentsCount } = await supabaseClient.from('comments').select('*', { count: 'exact', head: true });
+        document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
+    }
+
+    function escapeHtml(str) { 
+        if (!str) return ''; 
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
+    }
+
+    document.getElementById('addTrackBtn').onclick = () => addTrack(
+        document.getElementById('trackTitle').value,
+        document.getElementById('trackArtist').value,
+        document.getElementById('trackUrl').value
+    );
+    document.getElementById('sendCommentBtn').onclick = () => addComment(document.getElementById('commentInput').value);
+    document.getElementById('commentInput').addEventListener('input', function() { 
+        const len = this.value.length; 
+        const counter = document.getElementById('charCounter'); 
+        counter.innerText = `${len} / 250`; 
+        if (len > 250) counter.classList.add('warning'); 
+        else counter.classList.remove('warning'); 
+    });
+
+    checkAuth();
+</script>
+</body>
+</html>
