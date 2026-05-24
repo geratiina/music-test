@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Музыкальный проект — 68 (ТЕСТ)</title>
+    <title>Музыкальный проект — 68</title>
     <link rel="icon" type="image/png" href="https://github.com/geratiina/music-supabase/raw/main/avatar.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
@@ -113,6 +113,17 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+        .age-restriction {
+            background: #ef4444;
+            color: white;
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.4rem;
+            display: inline-block;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         .avatar {
             width: 48px;
@@ -699,6 +710,7 @@
                 text-align: center;
             }
             .header-left { justify-content: center; }
+            .age-restriction { font-size: 0.6rem; padding: 0.15rem 0.3rem; }
             .avatar { width: 40px; height: 40px; }
             h1 { font-size: 1rem; }
             .stats { font-size: 0.6rem; }
@@ -756,6 +768,7 @@
         <div class="sticky-header">
             <div class="glass-header">
                 <div class="header-left">
+                    <div class="age-restriction">16+</div>
                     <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
                     <div class="title-stats">
                         <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
