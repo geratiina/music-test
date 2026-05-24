@@ -149,24 +149,21 @@
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 600;
+            font-size: 0.9rem;
         }
-        .social-icon svg {
-            width: 24px;
-            height: 24px;
-            display: block;
+        .social-icon.vk {
+            background: #0077FF;
+            border-color: #0077FF;
+            color: white;
+        }
+        .social-icon.tg {
+            background: #26A5E4;
+            border-color: #26A5E4;
+            color: white;
         }
         .social-icon:hover {
             transform: scale(1.08);
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.4);
-        }
-        .social-icon.vk:hover {
-            background: #0077FF;
-            border-color: #0077FF;
-        }
-        .social-icon.tg:hover {
-            background: #26A5E4;
-            border-color: #26A5E4;
         }
         
         .user-info {
@@ -560,6 +557,38 @@
             text-shadow: 0 0 4px #3b82f6;
         }
         
+        /* Нижняя панель с пользователем */
+        .user-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            color: white;
+            pointer-events: none;
+        }
+        .user-panel-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-role {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            background: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+        .user-role.admin {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        
         @media (max-width: 768px) {
             body { padding: 10px; }
             .site-wrapper { flex-direction: column; }
@@ -600,6 +629,13 @@
             .admin-panel button { width: 100%; }
             
             .comments-section h2 { font-size: 1.1rem; }
+            
+            .user-panel {
+                bottom: 10px;
+                left: 10px;
+                padding: 0.3rem 0.8rem;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -629,20 +665,8 @@
                     </div>
                 </div>
                 <div class="social-header">
-                    <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon vk" title="ВКонтакте">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" fill="#0077FF"/>
-                            <path d="M15.8 15.2C16.3 14.7 16.7 14.1 17 13.4C17.2 12.9 16.9 12.4 16.4 12.2C15.8 12 15.2 12.3 14.9 12.8C14.6 13.2 14.2 13.6 13.8 13.9C13.4 14.2 12.9 14.2 12.5 14C12.1 13.8 11.9 13.4 11.9 13V9.5C11.9 8.9 11.4 8.5 10.9 8.5H9.5C8.9 8.5 8.5 9 8.5 9.5V15.5C8.5 16.1 9 16.5 9.5 16.5H15.5C15.9 16.5 16.3 16.2 16.3 15.8L15.8 15.2Z" fill="white"/>
-                            <path d="M16.5 9.5H15.5C15 9.5 14.5 9 14.5 8.5V7.5C14.5 6.9 15 6.5 15.5 6.5C16.1 6.5 16.5 6.9 16.5 7.5V8.5C16.5 9 16.1 9.5 15.5 9.5Z" fill="white"/>
-                        </svg>
-                    </a>
-                    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon tg" title="Telegram">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" fill="#26A5E4"/>
-                            <path d="M16.5 8.5L14.5 16.5C14.5 16.5 14.2 17 13.5 16.8L10.5 14.5L8.5 13.5L6.5 12.5C6.5 12.5 6 12.3 6 11.8C6 11.3 6.5 11 7 10.8L16 7.5C16 7.5 16.5 7.3 16.5 8.5Z" fill="white"/>
-                            <path d="M13.5 16.8L10.5 14.5L12 12L14.5 10L13.5 16.8Z" fill="white" opacity="0.8"/>
-                        </svg>
-                    </a>
+                    <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon vk">VK</a>
+                    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon tg">📱</a>
                 </div>
                 <div class="user-info" id="userInfo">
                     <span id="userEmail">Гость</span>
@@ -680,6 +704,14 @@
             <p>📢 Здесь могла быть ваша реклама</p>
             <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
         </div>
+    </div>
+</div>
+
+<!-- Нижняя панель с пользователем -->
+<div class="user-panel" id="userPanel">
+    <div class="user-panel-content">
+        <span id="userPanelName">Гость</span>
+        <span id="userPanelRole" class="user-role"></span>
     </div>
 </div>
 
@@ -752,6 +784,15 @@
         document.getElementById('logoutBtn').style.display = 'none';
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = 'none';
+        
+        // Обновляем нижнюю панель
+        const panelName = document.getElementById('userPanelName');
+        const panelRole = document.getElementById('userPanelRole');
+        if (panelName) panelName.innerText = 'Гость';
+        if (panelRole) {
+            panelRole.innerText = '';
+            panelRole.classList.remove('admin');
+        }
     }
 
     async function checkAuth() {
@@ -794,6 +835,20 @@
         
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
+        
+        // Обновляем нижнюю панель
+        const panelName = document.getElementById('userPanelName');
+        const panelRole = document.getElementById('userPanelRole');
+        if (panelName) panelName.innerText = displayName;
+        if (panelRole) {
+            if (isAdmin) {
+                panelRole.innerText = 'Админ';
+                panelRole.classList.add('admin');
+            } else {
+                panelRole.innerText = 'Пользователь';
+                panelRole.classList.remove('admin');
+            }
+        }
         
         loadTracks();
         loadComments();
