@@ -89,7 +89,6 @@
             display: inline-block;
         }
         
-        /* ОБНОВЛЁННЫЙ БЛОК ПОЛЬЗОВАТЕЛЯ */
         .user-info {
             background: rgba(0,0,0,0.5);
             padding: 0.4rem 1rem;
@@ -451,7 +450,6 @@
         }
         .modal-content input {
             width: 100%;
-            padding: 0.6rem;
             margin: 0.5rem 0;
             border-radius: 1rem;
             border: none;
@@ -468,6 +466,54 @@
         }
         .modal-content .close {
             background: #ef4444;
+        }
+        
+        /* Стили для поля пароля с глазиком */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        .password-wrapper input {
+            width: 100%;
+            padding: 0.6rem;
+            padding-right: 2.8rem;
+            border-radius: 1rem;
+            border: none;
+            background: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin: 0;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+            user-select: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            color: #888;
+            background: transparent;
+        }
+        .password-toggle:hover {
+            color: #aaa;
+            transform: translateY(-50%) scale(1.05);
+        }
+        .password-toggle.active {
+            color: white;
+            text-shadow: 0 0 4px #3b82f6;
+            background: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+        }
+        .password-toggle.active:hover {
+            background: rgba(59, 130, 246, 0.5);
         }
         
         @media (max-width: 768px) {
@@ -557,8 +603,14 @@
     <div class="modal-content">
         <h2 id="modalTitle">Вход</h2>
         <input type="email" id="authEmail" placeholder="Email">
-        <input type="password" id="authPassword" placeholder="Пароль">
+        
+        <div class="password-wrapper">
+            <input type="password" id="authPassword" placeholder="Пароль">
+            <span class="password-toggle" onclick="togglePassword('authPassword', this)">👁️</span>
+        </div>
+        
         <input type="text" id="authUsername" placeholder="Логин (только латиница, до 8 символов)" style="display: none;">
+        
         <button id="submitAuthBtn">Войти</button>
         <button class="close" onclick="closeModal()">Закрыть</button>
     </div>
@@ -596,6 +648,20 @@
     function isValidUsername(username) {
         const regex = /^[a-zA-Z]{1,8}$/;
         return regex.test(username);
+    }
+
+    // Функция переключения видимости пароля
+    function togglePassword(inputId, element) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            element.classList.add('active');
+            element.innerHTML = '🙈';
+        } else {
+            input.type = 'password';
+            element.classList.remove('active');
+            element.innerHTML = '👁️';
+        }
     }
 
     async function checkAuth() {
@@ -686,7 +752,6 @@
         document.getElementById('authUsername').style.display = 'none';
     }
 
-    // Обработчики кнопок
     document.getElementById('loginBtn').onclick = () => {
         currentAuthMode = 'login';
         document.getElementById('modalTitle').innerText = 'Вход';
