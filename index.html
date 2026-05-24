@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Музыкальный проект — 68 (ТЕСТ)</title>
     <link rel="icon" type="image/png" href="https://github.com/geratiina/music-supabase/raw/main/avatar.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -136,24 +136,20 @@
             cursor: pointer;
         }
         
-        /* СЕТКА ТРЕКОВ (2-3 в строку) */
+        /* КОМПАКТНАЯ СЕТКА */
         .track-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.2rem;
         }
         
-        /* КАРТОЧКА ТРЕКА (как плитка) */
         .track-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
             border-radius: 1rem;
-            padding: 1rem;
+            padding: 0.8rem;
             transition: all 0.2s ease;
             border: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             text-align: center;
         }
         .track-card:hover {
@@ -161,11 +157,11 @@
             transform: translateY(-3px);
         }
         
-        /* КОНТЕЙНЕР С АВАТАРКОЙ И КНОПКОЙ PLAY ПО ЦЕНТРУ */
+        /* УМЕНЬШЕННАЯ АВАТАРКА С КНОПКОЙ PLAY */
         .cover-container {
             position: relative;
             width: 100%;
-            max-width: 180px;
+            max-width: 140px;
             margin: 0 auto;
         }
         .track-cover {
@@ -182,8 +178,8 @@
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(4px);
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -197,97 +193,64 @@
             transform: translate(-50%, -50%) scale(1.05);
         }
         .play-overlay span {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: white;
         }
         
-        /* ИНФОРМАЦИЯ О ТРЕКЕ */
+        /* ТЕКСТ */
         .track-title {
             font-size: 1rem;
             font-weight: 700;
             color: white;
-            margin-top: 0.8rem;
+            margin-top: 0.6rem;
             margin-bottom: 0.2rem;
-            word-break: break-word;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .track-artist {
             font-size: 0.8rem;
             color: #a0aec0;
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .track-duration {
+            font-size: 0.75rem;
+            color: #cbd5e1;
             margin-bottom: 0.5rem;
         }
         
-        /* ПОЛЗУНОК ГРОМКОСТИ (рядом с аватаркой) */
-        .volume-control-card {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            width: 100%;
-        }
-        .volume-icon-card {
-            font-size: 0.8rem;
-            color: white;
-        }
-        .volume-slider-card {
-            width: 80px;
-            height: 3px;
-            cursor: pointer;
-            -webkit-appearance: none;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
-        }
-        .volume-slider-card::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-        }
-        
-        /* ЛАЙК И ВРЕМЯ (тайминг появляется только при воспроизведении) */
+        /* ЛАЙК И УДАЛЕНИЕ */
         .likes-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 0.5rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
         }
         .like-btn-card {
             background: transparent;
             border: 1px solid #ef4444;
             color: #ef4444;
-            padding: 0.2rem 0.8rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 1.5rem;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
         .like-btn-card.liked {
             background: #ef4444;
             color: white;
         }
-        .time-card {
-            font-size: 0.7rem;
-            color: #a0aec0;
-            background: rgba(0,0,0,0.5);
-            padding: 0.2rem 0.6rem;
-            border-radius: 1rem;
-            display: none;
-        }
-        .time-card.visible {
-            display: inline-block;
-        }
         .delete-track-card {
             background: #ef4444;
             border: none;
             color: white;
-            padding: 0.2rem 0.6rem;
+            padding: 0.2rem 0.5rem;
             border-radius: 1rem;
             cursor: pointer;
-            font-size: 0.7rem;
-            margin-left: 0.5rem;
+            font-size: 0.65rem;
         }
         
         .comments-section { margin-top: 2rem; }
@@ -401,14 +364,36 @@
             cursor: pointer;
             color: #3b82f6;
         }
+        
         @media (max-width: 768px) {
-            .glass-header { flex-direction: column; align-items: stretch; text-align: center; }
+            body { padding: 10px; }
+            .sticky-header { top: 10px; }
+            .glass-header {
+                padding: 0.6rem 1rem;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
             .header-left { justify-content: center; }
-            h1 { font-size: 1.2rem; text-align: center; }
+            .avatar { width: 40px; height: 40px; }
+            h1 { font-size: 1.1rem; }
+            .stats { font-size: 0.6rem; }
+            .user-info { justify-content: center; font-size: 0.7rem; }
+            
+            .track-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.8rem;
+            }
+            .cover-container { max-width: 100px; }
+            .play-overlay { width: 32px; height: 32px; }
+            .play-overlay span { font-size: 1rem; }
+            .track-title { font-size: 0.85rem; }
+            .track-artist { font-size: 0.7rem; }
+            .track-duration { font-size: 0.65rem; }
+            .like-btn-card { padding: 0.15rem 0.5rem; font-size: 0.65rem; }
+            
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
-            .user-info { justify-content: center; }
-            .track-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -628,25 +613,21 @@
         let html = '';
         data.forEach((track, index) => {
             const isLiked = userLikes.includes(track.id);
+            // Получаем длительность трека (если есть в метаданных)
+            const duration = track.duration ? formatTime(track.duration) : '--:--';
             html += `
                 <div class="track-card" data-track-id="${track.id}" data-index="${index}">
                     <div class="cover-container">
-                        <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/180x180/2b2b4f/white?text=🎵'">
+                        <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/140x140/2b2b4f/white?text=🎵'">
                         <div class="play-overlay" data-play-index="${index}">
                             <span>▶</span>
                         </div>
                     </div>
                     <div class="track-title">${escapeHtml(track.title)}</div>
                     <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
-                    
-                    <div class="volume-control-card">
-                        <span class="volume-icon-card">🔊</span>
-                        <input type="range" class="volume-slider-card" min="0" max="100" value="70">
-                    </div>
-                    
+                    <div class="track-duration" id="duration-${track.id}">${duration}</div>
                     <div class="likes-row">
                         <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
-                        <span class="time-card" id="time-${track.id}">00:00 / 00:00</span>
                         ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
                     </div>
                     <audio style="display:none;" id="audio-${track.id}" preload="metadata">
@@ -657,12 +638,10 @@
         });
         container.innerHTML = html;
         
-        // Инициализация плееров
         data.forEach((track, index) => {
             initPlayerForTrack(track.id, index);
         });
         
-        // Инициализация лайков
         document.querySelectorAll('.like-btn-card').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
@@ -676,75 +655,41 @@
     function initPlayerForTrack(trackId, index) {
         const audio = document.getElementById(`audio-${trackId}`);
         const playBtn = document.querySelector(`.play-overlay[data-play-index="${index}"]`);
-        const timeSpan = document.getElementById(`time-${trackId}`);
-        const volumeSlider = document.querySelector(`.volume-slider-card`);
-        const volumeIcon = document.querySelector(`.volume-icon-card`);
+        const durationSpan = document.getElementById(`duration-${trackId}`);
         
         if (!audio || !playBtn) return;
         
         let isPlaying = false;
         
+        // Получаем длительность трека
         audio.addEventListener('loadedmetadata', () => {
-            if (timeSpan && !isPlaying) {
-                timeSpan.classList.remove('visible');
+            if (durationSpan && !isNaN(audio.duration)) {
+                durationSpan.textContent = formatTime(audio.duration);
             }
         });
-        
-        audio.addEventListener('timeupdate', () => {
-            if (timeSpan && isPlaying) {
-                timeSpan.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
-            }
-        });
-        
-        function updateTimeDisplay() {
-            if (timeSpan && isPlaying) {
-                timeSpan.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
-            }
-        }
         
         playBtn.addEventListener('click', () => {
             if (isPlaying) {
                 audio.pause();
                 playBtn.innerHTML = '<span>▶</span>';
-                if (timeSpan) timeSpan.classList.remove('visible');
             } else {
                 document.querySelectorAll('audio').forEach(a => {
                     if (a !== audio && !a.paused) {
                         a.pause();
                         const btn = document.querySelector(`.play-overlay[data-play-index="${a.id?.replace('audio-', '')}"]`);
                         if (btn) btn.innerHTML = '<span>▶</span>';
-                        const tSpan = document.getElementById(`time-${a.id?.replace('audio-', '')}`);
-                        if (tSpan) tSpan.classList.remove('visible');
                     }
                 });
                 audio.play();
                 playBtn.innerHTML = '<span>⏸</span>';
-                if (timeSpan) {
-                    timeSpan.classList.add('visible');
-                    updateTimeDisplay();
-                }
             }
             isPlaying = !isPlaying;
         });
         
         audio.addEventListener('ended', () => {
             playBtn.innerHTML = '<span>▶</span>';
-            if (timeSpan) timeSpan.classList.remove('visible');
             isPlaying = false;
         });
-        
-        // Громкость
-        if (volumeSlider) {
-            volumeSlider.addEventListener('input', (e) => {
-                audio.volume = e.target.value / 100;
-                if (volumeIcon) {
-                    if (audio.volume === 0) volumeIcon.textContent = '🔇';
-                    else if (audio.volume < 0.5) volumeIcon.textContent = '🔉';
-                    else volumeIcon.textContent = '🔊';
-                }
-            });
-            audio.volume = 0.7;
-        }
     }
 
     async function deleteTrack(id) {
@@ -814,7 +759,7 @@
         if (isNaN(sec)) return '00:00'; 
         const m = Math.floor(sec / 60); 
         const s = Math.floor(sec % 60); 
-        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`; 
+        return `${m}:${s.toString().padStart(2, '0')}`; 
     }
 
     function escapeHtml(str) { 
