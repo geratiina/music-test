@@ -37,6 +37,38 @@
             padding: 20px;
         }
         
+        /* БУРГЕР-МЕНЮ (всегда слева, отдельно от шапки) */
+        .burger-menu-fixed {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .burger-menu-fixed:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.02);
+        }
+        .burger-menu-fixed .menu-icon {
+            width: 24px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .burger-menu-fixed .menu-icon span {
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+        
         .auth-buttons-top {
             position: fixed;
             top: 20px;
@@ -124,7 +156,7 @@
             top: 20px;
             z-index: 100;
             margin-bottom: 1.5rem;
-            margin-top: 60px;
+            margin-top: 0;
         }
         .glass-header {
             background: rgba(0, 0, 0, 0.65);
@@ -210,19 +242,20 @@
             transform: scale(1.08);
         }
         
-        .menu-icon {
-            width: 30px;
-            height: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            cursor: pointer;
+        .mobile-social {
+            display: none;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
         }
-        .menu-icon span {
-            height: 3px;
-            background: white;
-            border-radius: 2px;
-            transition: 0.2s;
+        .mobile-social .social-icon {
+            width: 48px;
+            height: 48px;
+            font-size: 1rem;
         }
         
         .author-menu {
@@ -745,46 +778,58 @@
             color: #ef4444;
         }
         
-        /* МОБИЛЬНАЯ АДАПТАЦИЯ — БУРГЕР СЛЕВА */
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
             body { padding: 10px; }
             .sticky-header { margin-top: 55px; }
-            .auth-buttons-top { top: 10px; right: 10px; }
-            .auth-buttons-top .auth-btn { padding: 6px 12px; font-size: 0.75rem; }
+            
+            .burger-menu-fixed {
+                top: 10px;
+                left: 10px;
+                padding: 10px 12px;
+            }
+            .burger-menu-fixed .menu-icon {
+                width: 20px;
+                height: 16px;
+            }
+            
+            .auth-buttons-top { 
+                top: 10px;
+                right: 10px;
+            }
+            .auth-buttons-top .auth-btn { 
+                padding: 6px 12px; 
+                font-size: 0.75rem; 
+            }
             
             .site-wrapper { flex-direction: column; gap: 0; }
             .ad-sidebar { display: none; }
             .mobile-ad { display: block; }
             .main-content { max-width: 100%; }
             
-            /* Шапка: бургер слева, кнопки справа */
+            /* Скрываем соц. кнопки из шапки на мобильных */
+            .social-header {
+                display: none;
+            }
+            
+            /* Показываем соц. кнопки между треками и комментариями */
+            .mobile-social {
+                display: flex;
+            }
+            
+            /* Шапка: без бургера, только аватар + название */
             .glass-header {
                 padding: 0.6rem 1rem;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: nowrap;
+                justify-content: center;
             }
             .header-left {
-                flex: 1;
-                justify-content: flex-start;
+                justify-content: center;
                 gap: 0.3rem;
             }
             .age-restriction { font-size: 0.6rem; padding: 0.15rem 0.3rem; }
             .avatar { width: 36px; height: 36px; }
             h1 { font-size: 0.85rem; }
             .stats { font-size: 0.5rem; padding: 0.1rem 0.5rem; }
-            
-            /* Бургер в левом углу */
-            .menu-icon {
-                order: -1;
-                margin: 0;
-            }
-            
-            /* Социальные кнопки скрываем на телефонах */
-            .social-header {
-                display: none;
-            }
             
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
@@ -833,6 +878,13 @@
 </video>
 <div class="overlay"></div>
 
+<!-- БУРГЕР-МЕНЮ (отдельно, фиксированно слева) -->
+<div class="burger-menu-fixed" id="burgerMenuFixed">
+    <div class="menu-icon">
+        <span></span><span></span><span></span>
+    </div>
+</div>
+
 <div class="auth-buttons-top" id="authButtonsTop">
     <button id="loginBtnTop" class="auth-btn">Вход</button>
     <button id="registerBtnTop" class="auth-btn">Регистрация</button>
@@ -850,9 +902,6 @@
     <div class="main-content">
         <div class="sticky-header">
             <div class="glass-header">
-                <div class="menu-icon" id="menuIcon">
-                    <span></span><span></span><span></span>
-                </div>
                 <div class="header-left">
                     <div class="age-restriction">16+</div>
                     <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
@@ -887,6 +936,16 @@
         </div>
         
         <div id="trackList" class="track-list"></div>
+        
+        <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (между треками и комментариями) -->
+        <div class="mobile-social">
+            <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon vk">VK</a>
+            <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon tg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z" fill="white"/>
+                </svg>
+            </a>
+        </div>
         
         <div class="comments-section">
             <h2>💬 Комментарии</h2>
@@ -1403,11 +1462,13 @@
         else counter.classList.remove('warning');
     });
 
-    const menuIcon = document.getElementById('menuIcon');
-    const authorMenu = document.getElementById('authorMenu');
+    // Управление бургер-меню через новую кнопку
+    const burgerBtn = document.getElementById('burgerMenuFixed');
+    const authorMenuElem = document.getElementById('authorMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
-    if (menuIcon) menuIcon.onclick = () => authorMenu.classList.add('open');
-    if (closeMenuBtn) closeMenuBtn.onclick = () => authorMenu.classList.remove('open');
+    
+    if (burgerBtn) burgerBtn.onclick = () => authorMenuElem.classList.add('open');
+    if (closeMenuBtn) closeMenuBtn.onclick = () => authorMenuElem.classList.remove('open');
 
     checkAuth();
 </script>
