@@ -278,7 +278,7 @@
             width: 0%;
         }
         
-        /* ЛАЙК */
+        /* КРАСИВЫЕ КНОПКИ ЛАЙКА И УДАЛЕНИЯ */
         .likes-row {
             display: flex;
             align-items: center;
@@ -287,26 +287,49 @@
             margin-top: 0.3rem;
         }
         .like-btn-card {
-            background: transparent;
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            padding: 0.2rem 0.6rem;
-            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: none;
+            color: #cbd5e1;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .like-btn-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
         }
         .like-btn-card.liked {
             background: #ef4444;
             color: white;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        .like-btn-card.liked:hover {
+            background: #dc2626;
         }
         .delete-track-card {
-            background: #ef4444;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
             border: none;
-            color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 1rem;
+            color: #a0aec0;
+            padding: 0.3rem 0.7rem;
+            border-radius: 2rem;
             cursor: pointer;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        .delete-track-card:hover {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
         }
         
         .comments-section { margin-top: 2rem; }
@@ -691,7 +714,7 @@
                         </div>
                         <div class="likes-row">
                             <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
-                            ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
+                            ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
                         </div>
                     </div>
                     <audio style="display:none;" id="audio-${track.id}" preload="metadata">
