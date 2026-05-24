@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
+        /* Стили такие же, как в предыдущей версии (опущены для краткости) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         .video-background {
@@ -785,7 +786,6 @@
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = 'none';
         
-        // Обновляем нижнюю панель
         const panelName = document.getElementById('userPanelName');
         const panelRole = document.getElementById('userPanelRole');
         if (panelName) panelName.innerText = 'Гость';
@@ -836,7 +836,6 @@
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
         
-        // Обновляем нижнюю панель
         const panelName = document.getElementById('userPanelName');
         const panelRole = document.getElementById('userPanelRole');
         if (panelName) panelName.innerText = displayName;
@@ -1022,18 +1021,27 @@
         }
     }
 
+    // ========== ИСПРАВЛЕННЫЕ КОММЕНТАРИИ ==========
     async function loadComments() {
         const container = document.getElementById('commentsList');
         if (!container) return;
         
+        console.log('Загрузка комментариев...');
+        
         const { data, error } = await supabaseClient
             .from('comments')
-            .select('*, profiles(username, role)')
+            .select(`
+                id,
+                text,
+                created_at,
+                user_id,
+                profiles:user_id (username, role)
+            `)
             .order('created_at', { ascending: false });
         
         if (error) {
             console.error('Ошибка загрузки комментариев:', error);
-            container.innerHTML = '';
+            container.innerHTML = '<div class="empty-message">❌ Ошибка загрузки</div>';
             return;
         }
         
@@ -1042,10 +1050,13 @@
             return;
         }
         
+        console.log('Загружено комментариев:', data.length);
+        
         let html = '';
         for (const comment of data) {
             let authorName = 'Гость';
             const profile = comment.profiles;
+            
             if (profile) {
                 if (profile.role === 'admin' || profile.role === 'tech_admin') {
                     authorName = '<span style="color: #ef4444; font-weight: bold;">Тех-Админ</span>';
@@ -1077,15 +1088,18 @@
         if (!text.trim()) return alert('Напишите что-нибудь');
         if (text.length > 250) return alert('Максимум 250 символов');
         
-        const { error } = await supabaseClient.from('comments').insert({
+        console.log('Добавление комментария от пользователя:', currentUser.id);
+        
+        const { data, error } = await supabaseClient.from('comments').insert({
             text: text.trim(),
             user_id: currentUser.id
-        });
+        }).select();
         
         if (error) {
-            console.error('Ошибка добавления:', error);
+            console.error('Ошибка добавления комментария:', error);
             alert('Ошибка: ' + error.message);
         } else {
+            console.log('Комментарий добавлен:', data);
             document.getElementById('commentInput').value = '';
             document.getElementById('charCounter').innerText = '0 / 250';
             alert('✅ Комментарий добавлен');
