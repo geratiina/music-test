@@ -10,31 +10,13 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .video-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -2;
-            filter: blur(5px);
-            transform: scale(1.01);
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: -1;
-        }
         body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             padding: 20px;
         }
+        
         .sticky-header {
             position: sticky;
             top: 20px;
@@ -136,7 +118,7 @@
             cursor: pointer;
         }
         
-        /* КАРТОЧКА ТРЕКА ПО СХЕМЕ */
+        /* КАРТОЧКА ТРЕКА */
         .track-list {
             display: flex;
             flex-direction: column;
@@ -158,7 +140,6 @@
             background: rgba(0, 0, 0, 0.8);
         }
         
-        /* ЛЕВАЯ КОЛОНКА (АВАТАРКА + ТАЙМИНГ) */
         .track-left {
             display: flex;
             flex-direction: column;
@@ -209,10 +190,9 @@
             color: #cbd5e1;
         }
         
-        /* ПРАВАЯ КОЛОНКА (ИНФО + УПРАВЛЕНИЕ) */
         .track-right {
             flex: 1;
-            min-width: 180px;
+            min-width: 160px;
         }
         .track-title {
             font-size: 1rem;
@@ -226,7 +206,6 @@
             margin-bottom: 0.5rem;
         }
         
-        /* ПОЛЗУНОК ГРОМКОСТИ (появляется при воспроизведении) */
         .volume-control {
             display: none;
             align-items: center;
@@ -257,7 +236,6 @@
             cursor: pointer;
         }
         
-        /* ПРОГРЕСС-БАР (появляется при воспроизведении) */
         .progress-control {
             display: none;
             margin-bottom: 0.5rem;
@@ -278,7 +256,6 @@
             width: 0%;
         }
         
-        /* КРАСИВЫЕ КНОПКИ ЛАЙКА И УДАЛЕНИЯ */
         .likes-row {
             display: flex;
             align-items: center;
@@ -310,9 +287,6 @@
             color: white;
             box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
         }
-        .like-btn-card.liked:hover {
-            background: #dc2626;
-        }
         .delete-track-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(4px);
@@ -323,15 +297,13 @@
             cursor: pointer;
             font-size: 0.7rem;
             transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.2rem;
         }
         .delete-track-card:hover {
             background: rgba(239, 68, 68, 0.8);
             color: white;
         }
         
+        /* КОММЕНТАРИИ */
         .comments-section { margin-top: 2rem; }
         .comments-section h2 {
             font-size: 1.3rem;
@@ -347,9 +319,34 @@
             justify-content: space-between;
             align-items: center;
         }
-        .comment-author { font-weight: bold; color: #e0e7ff; font-size: 0.9rem; }
-        .comment-date { font-size: 0.65rem; color: #cbd5e1; margin-left: 0.5rem; }
-        .comment-text { color: white; margin-top: 0.2rem; font-size: 0.9rem; }
+        .comment-content {
+            flex: 1;
+        }
+        .comment-author {
+            font-weight: bold;
+            color: #e0e7ff;
+            font-size: 0.9rem;
+        }
+        .comment-date {
+            font-size: 0.65rem;
+            color: #cbd5e1;
+            margin-left: 0.5rem;
+        }
+        .comment-text {
+            color: white;
+            margin-top: 0.2rem;
+            font-size: 0.9rem;
+        }
+        .delete-comment-btn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.2rem 0.7rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        
         textarea {
             width: 100%;
             border-radius: 1.5rem;
@@ -474,11 +471,6 @@
     </style>
 </head>
 <body>
-
-<video class="video-background" autoplay loop muted playsinline>
-    <source src="https://github.com/geratiina/back/raw/main/background.mp4" type="video/mp4">
-</video>
-<div class="overlay"></div>
 
 <div class="sticky-header">
     <div class="glass-header">
@@ -649,19 +641,82 @@
         }
     }
 
+    // ========== КОММЕНТАРИИ (ИСПРАВЛЕННЫЕ) ==========
+    async function loadComments() {
+        const container = document.getElementById('commentsList');
+        if (!container) return;
+        
+        container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
+        
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) {
+            console.error('Ошибка загрузки комментариев:', error);
+            container.innerHTML = '<div class="empty-message">❌ Ошибка загрузки</div>';
+            return;
+        }
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>';
+            return;
+        }
+        
+        let html = '';
+        for (const comment of data) {
+            let authorName = 'Гость';
+            if (comment.user_id) {
+                const { data: profile } = await supabaseClient
+                    .from('profiles')
+                    .select('email')
+                    .eq('id', comment.user_id)
+                    .single();
+                if (profile?.email) authorName = profile.email;
+            }
+            
+            html += `
+                <div class="comment">
+                    <div class="comment-content">
+                        <div>
+                            <span class="comment-author">💬 ${escapeHtml(authorName)}</span>
+                            <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                    </div>
+                    ${isAdmin ? `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">🗑️</button>` : ''}
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+    }
+
     async function addComment(text) {
         if (!currentUser) return alert('Войдите в аккаунт, чтобы комментировать');
         if (!text.trim()) return alert('Напишите что-нибудь');
         if (text.length > 250) return alert('Максимум 250 символов');
+        
         const { error } = await supabaseClient.from('comments').insert({
             text: text.trim(),
             user_id: currentUser.id
         });
-        if (error) alert('Ошибка: ' + error.message);
-        else {
+        
+        if (error) {
+            console.error('Ошибка добавления:', error);
+            alert('Ошибка: ' + error.message);
+        } else {
             document.getElementById('commentInput').value = '';
             document.getElementById('charCounter').innerText = '0 / 250';
             alert('✅ Комментарий добавлен');
+            loadComments();
+        }
+    }
+
+    async function deleteComment(id) {
+        if (!isAdmin) return;
+        if (confirm('Удалить комментарий?')) {
+            await supabaseClient.from('comments').delete().eq('id', id);
             loadComments();
         }
     }
@@ -848,36 +903,6 @@
             document.getElementById('trackArtist').value = '';
             document.getElementById('trackUrl').value = '';
             loadTracks();
-        }
-    }
-
-    async function loadComments() {
-        const container = document.getElementById('commentsList');
-        const { data, error } = await supabaseClient.from('comments').select('*, profiles(email)').order('created_at', { ascending: false });
-        if (error || !data?.length) { 
-            container.innerHTML = '<div class="empty-message">💭 Будь первым!</div>'; 
-            return; 
-        }
-        let html = '';
-        for (const c of data) {
-            const author = c.profiles?.email || 'Гость';
-            html += `<div class="comment">
-                        <div>
-                            <span class="comment-author">💬 ${escapeHtml(author)}</span> 
-                            <span class="comment-date">${new Date(c.created_at).toLocaleString()}</span>
-                            <div class="comment-text">${escapeHtml(c.text)}</div>
-                        </div>
-                        ${isAdmin ? `<button onclick="deleteComment(${c.id})" style="background:#ef4444; border:none; color:white; border-radius:2rem; padding:0.2rem 0.7rem; cursor:pointer;">🗑️</button>` : ''}
-                    </div>`;
-        }
-        container.innerHTML = html;
-    }
-
-    async function deleteComment(id) {
-        if (!isAdmin) return;
-        if (confirm('Удалить комментарий?')) {
-            await supabaseClient.from('comments').delete().eq('id', id);
-            loadComments();
         }
     }
 
