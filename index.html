@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
-        /* ... (стили такие же, как в предыдущей версии) ... */
+        /* Стили остаются без изменений (такие же, как в прошлый раз) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         .video-background {
@@ -648,37 +648,56 @@
         }
     }
 
+    function showLoggedOutUI() {
+        document.getElementById('userEmail').innerText = 'Гость';
+        document.getElementById('loginBtn').style.display = 'block';
+        document.getElementById('registerBtn').style.display = 'block';
+        document.getElementById('logoutBtn').style.display = 'none';
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel) adminPanel.style.display = 'none';
+    }
+
     async function checkAuth() {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        currentUser = user;
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userEmailSpan = document.getElementById('userEmail');
+        const { data: { user }, error } = await supabaseClient.auth.getUser();
         
-        if (user) {
-            const { data: profile } = await supabaseClient
-                .from('profiles')
-                .select('role, email, username')
-                .eq('id', user.id)
-                .single();
-            isAdmin = profile?.role === 'admin' || profile?.role === 'tech_admin';
-            const displayName = profile?.username || profile?.email || user.email;
-            userEmailSpan.innerText = displayName;
-            loginBtn.style.display = 'none';
-            registerBtn.style.display = 'none';
-            logoutBtn.style.display = 'block';
-            const adminPanel = document.getElementById('adminPanel');
-            if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
-        } else {
+        if (error || !user) {
+            currentUser = null;
             isAdmin = false;
-            userEmailSpan.innerText = 'Гость';
-            loginBtn.style.display = 'block';
-            registerBtn.style.display = 'block';
-            logoutBtn.style.display = 'none';
-            const adminPanel = document.getElementById('adminPanel');
-            if (adminPanel) adminPanel.style.display = 'none';
+            showLoggedOutUI();
+            loadTracks();
+            loadComments();
+            return;
         }
+        
+        const { data: profile, error: profileError } = await supabaseClient
+            .from('profiles')
+            .select('role, email, username')
+            .eq('id', user.id)
+            .maybeSingle();
+        
+        if (profileError || !profile) {
+            console.log('Пользователь не найден в profiles, выход');
+            await supabaseClient.auth.signOut();
+            currentUser = null;
+            isAdmin = false;
+            showLoggedOutUI();
+            loadTracks();
+            loadComments();
+            return;
+        }
+        
+        currentUser = user;
+        isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
+        const displayName = profile.username || profile.email || user.email;
+        
+        document.getElementById('userEmail').innerText = displayName;
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('registerBtn').style.display = 'none';
+        document.getElementById('logoutBtn').style.display = 'block';
+        
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
+        
         loadTracks();
         loadComments();
     }
@@ -766,13 +785,11 @@
         else register(email, pass, username);
     };
 
-    // ========== ФУНКЦИЯ ЛАЙКА С ОТМЕНОЙ ==========
     async function likeTrack(trackId) {
         console.log('Лайк трека:', trackId);
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
         
-        // Ищем существующий лайк
         let query = supabaseClient
             .from('likes')
             .select('id')
@@ -787,7 +804,6 @@
         const { data: existing } = await query.maybeSingle();
         
         if (existing) {
-            // Если лайк уже есть — удаляем его
             const { error } = await supabaseClient
                 .from('likes')
                 .delete()
@@ -798,10 +814,9 @@
                 alert('Ошибка: ' + error.message);
             } else {
                 console.log('Лайк удалён');
-                loadTracks(); // Обновляем треки
+                loadTracks();
             }
         } else {
-            // Если лайка нет — добавляем
             const { error } = await supabaseClient.from('likes').insert({
                 track_id: trackId,
                 user_id: userId,
@@ -911,7 +926,6 @@
             return;
         }
         
-        // Получаем все лайки для текущего пользователя/устройства
         const fingerprint = await getDeviceFingerprint();
         let userLikes = [];
         if (currentUser) {
@@ -922,15 +936,11 @@
             userLikes = likes.map(l => l.track_id);
         }
         
-        // Получаем актуальные лайки из таблицы tracks
-        const { data: tracksWithLikes } = await supabaseClient.from('tracks').select('*');
-        
         let html = '';
-        for (let i = 0; i < tracksWithLikes.length; i++) {
-            const track = tracksWithLikes[i];
+        for (let i = 0; i < data.length; i++) {
+            const track = data[i];
             const isLiked = userLikes.includes(track.id);
             
-            // Получаем реальное количество лайков из таблицы likes
             const { count: likesCount } = await supabaseClient
                 .from('likes')
                 .select('*', { count: 'exact', head: true })
@@ -972,9 +982,8 @@
         }
         container.innerHTML = html;
         
-        // Инициализация плееров
-        for (let i = 0; i < tracksWithLikes.length; i++) {
-            initPlayerForTrack(tracksWithLikes[i].id, i);
+        for (let i = 0; i < data.length; i++) {
+            initPlayerForTrack(data[i].id, i);
         }
         
         document.querySelectorAll('.like-btn-card').forEach(btn => {
