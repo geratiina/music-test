@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
-        /* ... (стили такие же, как в прошлый раз, без изменений) ... */
+        /* ... (стили такие же, как в предыдущей версии) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         .video-background {
@@ -766,13 +766,13 @@
         else register(email, pass, username);
     };
 
-    // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ЛАЙКА ==========
+    // ========== ФУНКЦИЯ ЛАЙКА С ОТМЕНОЙ ==========
     async function likeTrack(trackId) {
         console.log('Лайк трека:', trackId);
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
         
-        // Проверяем, есть ли уже лайк
+        // Ищем существующий лайк
         let query = supabaseClient
             .from('likes')
             .select('id')
@@ -787,22 +787,34 @@
         const { data: existing } = await query.maybeSingle();
         
         if (existing) {
-            alert('Вы уже лайкали этот трек');
-            return;
-        }
-        
-        const { error } = await supabaseClient.from('likes').insert({
-            track_id: trackId,
-            user_id: userId,
-            device_fingerprint: userId ? null : fingerprint
-        });
-        
-        if (error) {
-            console.error('Ошибка лайка:', error);
-            alert('Ошибка: ' + error.message);
+            // Если лайк уже есть — удаляем его
+            const { error } = await supabaseClient
+                .from('likes')
+                .delete()
+                .eq('id', existing.id);
+            
+            if (error) {
+                console.error('Ошибка удаления лайка:', error);
+                alert('Ошибка: ' + error.message);
+            } else {
+                console.log('Лайк удалён');
+                loadTracks(); // Обновляем треки
+            }
         } else {
-            console.log('Лайк успешно поставлен');
-            loadTracks(); // Обновляем треки
+            // Если лайка нет — добавляем
+            const { error } = await supabaseClient.from('likes').insert({
+                track_id: trackId,
+                user_id: userId,
+                device_fingerprint: userId ? null : fingerprint
+            });
+            
+            if (error) {
+                console.error('Ошибка добавления лайка:', error);
+                alert('Ошибка: ' + error.message);
+            } else {
+                console.log('Лайк добавлен');
+                loadTracks();
+            }
         }
     }
 
@@ -899,6 +911,7 @@
             return;
         }
         
+        // Получаем все лайки для текущего пользователя/устройства
         const fingerprint = await getDeviceFingerprint();
         let userLikes = [];
         if (currentUser) {
@@ -909,15 +922,26 @@
             userLikes = likes.map(l => l.track_id);
         }
         
+        // Получаем актуальные лайки из таблицы tracks
+        const { data: tracksWithLikes } = await supabaseClient.from('tracks').select('*');
+        
         let html = '';
-        data.forEach((track, index) => {
+        for (let i = 0; i < tracksWithLikes.length; i++) {
+            const track = tracksWithLikes[i];
             const isLiked = userLikes.includes(track.id);
+            
+            // Получаем реальное количество лайков из таблицы likes
+            const { count: likesCount } = await supabaseClient
+                .from('likes')
+                .select('*', { count: 'exact', head: true })
+                .eq('track_id', track.id);
+            
             html += `
-                <div class="track-card" data-track-id="${track.id}" data-index="${index}">
+                <div class="track-card" data-track-id="${track.id}" data-index="${i}">
                     <div class="track-left">
                         <div class="cover-container">
                             <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
-                            <div class="play-overlay" data-play-index="${index}">
+                            <div class="play-overlay" data-play-index="${i}">
                                 <span>▶</span>
                             </div>
                         </div>
@@ -936,7 +960,7 @@
                             </div>
                         </div>
                         <div class="likes-row">
-                            <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
+                            <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${likesCount || 0}</button>
                             ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
                         </div>
                     </div>
@@ -945,12 +969,13 @@
                     </audio>
                 </div>
             `;
-        });
+        }
         container.innerHTML = html;
         
-        data.forEach((track, index) => {
-            initPlayerForTrack(track.id, index);
-        });
+        // Инициализация плееров
+        for (let i = 0; i < tracksWithLikes.length; i++) {
+            initPlayerForTrack(tracksWithLikes[i].id, i);
+        }
         
         document.querySelectorAll('.like-btn-card').forEach(btn => {
             btn.onclick = (e) => {
