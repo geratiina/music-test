@@ -37,6 +37,35 @@
             padding: 20px;
         }
         
+        /* Кнопки авторизации в правом верхнем углу (над шапкой) */
+        .auth-buttons-top {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            gap: 10px;
+        }
+        .auth-buttons-top .auth-btn {
+            background: #3b82f6;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 2rem;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .auth-buttons-top .auth-btn:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+        .auth-buttons-top .logout-btn {
+            background: #ef4444;
+        }
+        
         .site-wrapper {
             display: flex;
             justify-content: center;
@@ -96,6 +125,7 @@
             top: 20px;
             z-index: 100;
             margin-bottom: 1.5rem;
+            margin-top: 60px; /* Отступ для кнопок авторизации */
         }
         .glass-header {
             background: rgba(0, 0, 0, 0.65);
@@ -257,7 +287,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* ИСПОЛНИТЕЛИ */
         .author-list {
             display: flex;
             flex-direction: column;
@@ -288,7 +317,6 @@
             font-weight: 600;
         }
         
-        /* ВИДЕО */
         .video-list {
             display: flex;
             flex-direction: column;
@@ -351,135 +379,68 @@
             font-size: 0.8rem;
         }
         
-        /* МОДАЛЬНОЕ ОКНО ДЛЯ ИСПОЛНИТЕЛЯ (ПО ЦЕНТРУ, С БЛЮРОМ ФОНА) */
-        .overlay-blur {
+        /* МОДАЛЬНЫЕ ОКНА */
+        .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85);
             z-index: 2000;
             justify-content: center;
             align-items: center;
         }
-        .singer-card {
-            background: rgba(30, 30, 50, 0.95);
-            border-radius: 2rem;
-            max-width: 500px;
-            width: 90%;
+        .modal-content {
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
             padding: 2rem;
-            text-align: center;
+            border-radius: 2rem;
+            width: 90%;
+            max-width: 400px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
             position: relative;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        .singer-card .close-card {
+        .close-modal {
             position: absolute;
             top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
-            cursor: pointer;
-            color: white;
-            transition: 0.2s;
-        }
-        .singer-card .close-card:hover {
-            color: #ef4444;
-        }
-        .singer-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1.5rem;
-            border: 3px solid #3b82f6;
-        }
-        .singer-name {
+            right: 1rem;
+            background: none;
+            border: none;
             color: white;
             font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        .singer-description {
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            text-align: left;
-            white-space: pre-wrap;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
+            cursor: pointer;
         }
         
-        /* МОДАЛЬНОЕ ОКНО ДЛЯ ВИДЕО (ВСТРОЕННЫЙ ПЛЕЕР) */
-        .video-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        .video-container {
-            background: #000;
-            border-radius: 1rem;
-            max-width: 800px;
-            width: 90%;
+        .password-wrapper {
             position: relative;
-        }
-        .video-container .close-video {
-            position: absolute;
-            top: -2rem;
-            right: 0;
-            font-size: 2rem;
-            cursor: pointer;
-            color: white;
-            transition: 0.2s;
-        }
-        .video-container .close-video:hover {
-            color: #ef4444;
-        }
-        .video-player {
             width: 100%;
-            border-radius: 0.5rem;
+            margin: 0.5rem 0;
         }
-        .video-title-modal {
-            color: white;
-            text-align: center;
-            margin-top: 0.5rem;
-        }
-        
-        .user-info {
-            background: rgba(0,0,0,0.5);
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-        .auth-btn {
-            background: #3b82f6;
+        .password-wrapper input {
+            width: 100%;
+            padding: 0.6rem 2.5rem 0.6rem 1rem;
+            margin: 0;
+            border-radius: 1rem;
             border: none;
-            padding: 0.3rem 0.8rem;
-            border-radius: 1.5rem;
-            color: white;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
+            background: rgba(255,255,255,0.9);
+            box-sizing: border-box;
         }
-        .auth-btn:hover {
-            transform: scale(1.02);
-            opacity: 0.9;
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+            user-select: none;
+            color: #888;
+        }
+        .password-toggle.active {
+            color: white;
+            text-shadow: 0 0 4px #3b82f6;
         }
         
         .admin-panel {
@@ -803,33 +764,6 @@
         .char-counter.warning { color: #ef4444; }
         
         .empty-message { text-align: center; padding: 2rem; color: white; }
-
-        .password-wrapper {
-            position: relative;
-            width: 100%;
-            margin: 0.5rem 0;
-        }
-        .password-wrapper input {
-            width: 100%;
-            padding: 0.6rem 2.5rem 0.6rem 1rem;
-            margin: 0;
-            box-sizing: border-box;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 1.2rem;
-            user-select: none;
-            transition: all 0.2s ease;
-            color: #888;
-        }
-        .password-toggle.active {
-            color: white;
-            text-shadow: 0 0 4px #3b82f6;
-        }
         
         .user-panel {
             position: fixed;
@@ -864,6 +798,9 @@
         
         @media (max-width: 768px) {
             body { padding: 10px; }
+            .sticky-header { margin-top: 55px; }
+            .auth-buttons-top { top: 10px; right: 10px; }
+            .auth-buttons-top .auth-btn { padding: 6px 12px; font-size: 0.75rem; }
             .site-wrapper { flex-direction: column; gap: 0; }
             .ad-sidebar { display: none; }
             .mobile-ad { display: block; }
@@ -880,7 +817,6 @@
             .avatar { width: 40px; height: 40px; }
             h1 { font-size: 1rem; }
             .stats { font-size: 0.6rem; }
-            .user-info { justify-content: center; font-size: 0.7rem; }
             .social-header { justify-content: center; margin-top: 0.5rem; }
             .menu-icon { margin: 0 auto; }
             
@@ -917,14 +853,6 @@
                 width: 100%;
                 left: -100%;
             }
-            
-            .singer-photo {
-                width: 100px;
-                height: 100px;
-            }
-            .singer-name {
-                font-size: 1.2rem;
-            }
         }
     </style>
 </head>
@@ -934,6 +862,13 @@
     <source src="https://github.com/geratiina/back/raw/main/background.mp4" type="video/mp4">
 </video>
 <div class="overlay"></div>
+
+<!-- КНОПКИ АВТОРИЗАЦИИ В ПРАВОМ ВЕРХНЕМ УГЛУ -->
+<div class="auth-buttons-top" id="authButtonsTop">
+    <button id="loginBtnTop" class="auth-btn">Вход</button>
+    <button id="registerBtnTop" class="auth-btn">Регистрация</button>
+    <button id="logoutBtnTop" class="auth-btn logout-btn" style="display: none;">Выйти</button>
+</div>
 
 <div class="site-wrapper">
     <div class="ad-sidebar">
@@ -961,14 +896,6 @@
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z" fill="white"/>
                         </svg>
                     </a>
-                </div>
-                <div class="user-info" id="userInfo">
-                    <span id="userEmail">Гость</span>
-                    <div id="authButtons" style="display: flex; gap: 0.5rem;">
-                        <button id="loginBtn" class="auth-btn">Вход</button>
-                        <button id="registerBtn" class="auth-btn">Регистрация</button>
-                        <button id="logoutBtn" class="auth-btn" style="display: none; background: #ef4444;">Выйти</button>
-                    </div>
                 </div>
                 <div class="menu-icon" id="menuIcon">
                     <span></span><span></span><span></span>
@@ -1047,24 +974,24 @@
     </div>
 </div>
 
-<!-- Модальное окно для исполнителя (по центру, с блюром) -->
-<div id="singerModal" class="overlay-blur">
-    <div class="singer-card">
-        <div class="close-card" onclick="closeSingerModal()">✕</div>
-        <img id="singerPhoto" class="singer-photo" src="" alt="">
-        <h3 id="singerName" class="singer-name"></h3>
-        <p id="singerDescription" class="singer-description"></p>
+<!-- Модальное окно для исполнителя -->
+<div id="singerModal" class="modal">
+    <div class="modal-content" style="max-width: 500px; text-align: center;">
+        <button class="close-modal" onclick="closeSingerModal()">✕</button>
+        <img id="singerPhoto" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 3px solid #3b82f6;" src="" alt="">
+        <h3 id="singerName" style="color: white; font-size: 1.3rem; margin-bottom: 1rem;"></h3>
+        <p id="singerDescription" style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; text-align: left;"></p>
     </div>
 </div>
 
-<!-- Модальное окно для видео (встроенный плеер) -->
-<div id="videoModal" class="video-modal">
-    <div class="video-container">
-        <div class="close-video" onclick="closeVideoPlayer()">✕</div>
-        <video id="videoPlayer" class="video-player" controls autoplay>
+<!-- Модальное окно для видео -->
+<div id="videoModal" class="modal">
+    <div class="modal-content" style="max-width: 800px; text-align: center;">
+        <button class="close-modal" onclick="closeVideoPlayer()">✕</button>
+        <h3 id="videoModalTitle" style="color: white; margin-bottom: 1rem;"></h3>
+        <video id="videoPlayer" class="video-player" controls autoplay style="width: 100%; border-radius: 0.5rem;">
             <source src="" type="video/mp4">
         </video>
-        <h3 id="videoModalTitle" class="video-title-modal"></h3>
     </div>
 </div>
 
@@ -1085,7 +1012,7 @@
         </div>
         <input type="text" id="authUsername" placeholder="Логин (3-8 латиница)" style="display: none;">
         <button id="submitAuthBtn">Войти</button>
-        <button class="close" onclick="closeModal()">Закрыть</button>
+        <button class="close-modal" onclick="closeModal()">Закрыть</button>
     </div>
 </div>
 
@@ -1154,19 +1081,17 @@
     }
 
     function showLoggedOutUI() {
-        document.getElementById('userEmail').innerText = 'Гость';
-        document.getElementById('loginBtn').style.display = 'block';
-        document.getElementById('registerBtn').style.display = 'block';
-        document.getElementById('logoutBtn').style.display = 'none';
-        const adminPanel = document.getElementById('adminPanel');
-        if (adminPanel) adminPanel.style.display = 'none';
-        const panelName = document.getElementById('userPanelName');
+        document.getElementById('userPanelName').innerText = 'Гость';
         const panelRole = document.getElementById('userPanelRole');
-        if (panelName) panelName.innerText = 'Гость';
         if (panelRole) {
             panelRole.innerText = '';
             panelRole.classList.remove('admin');
         }
+        document.getElementById('loginBtnTop').style.display = 'block';
+        document.getElementById('registerBtnTop').style.display = 'block';
+        document.getElementById('logoutBtnTop').style.display = 'none';
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel) adminPanel.style.display = 'none';
     }
 
     async function checkAuth() {
@@ -1192,15 +1117,9 @@
         currentUser = user;
         isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
         const displayName = profile.username || 'Пользователь';
-        document.getElementById('userEmail').innerText = displayName;
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('registerBtn').style.display = 'none';
-        document.getElementById('logoutBtn').style.display = 'block';
-        const adminPanel = document.getElementById('adminPanel');
-        if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
-        const panelName = document.getElementById('userPanelName');
+        
+        document.getElementById('userPanelName').innerText = displayName;
         const panelRole = document.getElementById('userPanelRole');
-        if (panelName) panelName.innerText = displayName;
         if (panelRole) {
             if (isAdmin) {
                 panelRole.innerText = 'Админ';
@@ -1210,6 +1129,14 @@
                 panelRole.classList.remove('admin');
             }
         }
+        
+        document.getElementById('loginBtnTop').style.display = 'none';
+        document.getElementById('registerBtnTop').style.display = 'none';
+        document.getElementById('logoutBtnTop').style.display = 'block';
+        
+        const adminPanel = document.getElementById('adminPanel');
+        if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
+        
         loadTracks();
         loadComments();
     }
@@ -1255,14 +1182,14 @@
         document.getElementById('authUsername').style.display = 'none';
     }
 
-    document.getElementById('loginBtn').onclick = () => {
+    document.getElementById('loginBtnTop').onclick = () => {
         currentAuthMode = 'login';
         document.getElementById('modalTitle').innerText = 'Вход';
         document.getElementById('submitAuthBtn').innerText = 'Войти';
         document.getElementById('authUsername').style.display = 'none';
         openModal();
     };
-    document.getElementById('registerBtn').onclick = () => {
+    document.getElementById('registerBtnTop').onclick = () => {
         currentAuthMode = 'register';
         document.getElementById('modalTitle').innerText = 'Регистрация';
         document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
@@ -1270,7 +1197,7 @@
         document.getElementById('authUsername').placeholder = 'Логин (3-8 латиница)';
         openModal();
     };
-    document.getElementById('logoutBtn').onclick = () => logout();
+    document.getElementById('logoutBtnTop').onclick = () => logout();
     document.getElementById('submitAuthBtn').onclick = () => {
         const email = document.getElementById('authEmail').value;
         const pass = document.getElementById('authPassword').value;
@@ -1508,25 +1435,21 @@
 
     function escapeHtml(str) { return str ? str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ========== ФУНКЦИИ ДЛЯ ИСПОЛНИТЕЛЕЙ ==========
+    // ========== МОДАЛЬНЫЕ ОКНА ДЛЯ ИСПОЛНИТЕЛЕЙ И ВИДЕО ==========
     function showSingerCard(name, description, imageUrl) {
         const modal = document.getElementById('singerModal');
         document.getElementById('singerPhoto').src = imageUrl;
         document.getElementById('singerName').innerText = name;
         document.getElementById('singerDescription').innerText = description;
         modal.style.display = 'flex';
-        // Закрываем бургер-меню, если открыто
         const authorMenu = document.getElementById('authorMenu');
-        if (authorMenu.classList.contains('open')) {
-            authorMenu.classList.remove('open');
-        }
+        if (authorMenu.classList.contains('open')) authorMenu.classList.remove('open');
     }
 
     function closeSingerModal() {
         document.getElementById('singerModal').style.display = 'none';
     }
 
-    // ========== ФУНКЦИИ ДЛЯ ВИДЕО ==========
     function openVideoPlayer(title, videoUrl) {
         const modal = document.getElementById('videoModal');
         const video = document.getElementById('videoPlayer');
@@ -1535,11 +1458,8 @@
         video.load();
         document.getElementById('videoModalTitle').innerText = title;
         modal.style.display = 'flex';
-        // Закрываем бургер-меню, если открыто
         const authorMenu = document.getElementById('authorMenu');
-        if (authorMenu.classList.contains('open')) {
-            authorMenu.classList.remove('open');
-        }
+        if (authorMenu.classList.contains('open')) authorMenu.classList.remove('open');
     }
 
     function closeVideoPlayer() {
