@@ -252,6 +252,20 @@
             z-index: 10;
         }
         
+        .menu-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .menu-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #3b82f6;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+        
         .author-list {
             display: flex;
             flex-direction: column;
@@ -316,10 +330,9 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-        /* Увеличенное фото в карточке 150x150 */
         .singer-photo {
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
             border-radius: 1rem;
             object-fit: cover;
             margin: 0 auto 1rem;
@@ -328,7 +341,19 @@
         .singer-name {
             color: white;
             font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        .singer-initials {
+            font-size: 1rem;
+            color: #3b82f6;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: -0.2rem;
             margin-bottom: 1rem;
+            padding: 0.2rem 0.8rem;
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.15);
+            border-radius: 2rem;
         }
         .singer-description {
             color: #cbd5e1;
@@ -720,28 +745,46 @@
             color: #ef4444;
         }
         
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ — БУРГЕР СЛЕВА */
         @media (max-width: 768px) {
             body { padding: 10px; }
             .sticky-header { margin-top: 55px; }
             .auth-buttons-top { top: 10px; right: 10px; }
             .auth-buttons-top .auth-btn { padding: 6px 12px; font-size: 0.75rem; }
+            
             .site-wrapper { flex-direction: column; gap: 0; }
             .ad-sidebar { display: none; }
             .mobile-ad { display: block; }
             .main-content { max-width: 100%; }
+            
+            /* Шапка: бургер слева, кнопки справа */
             .glass-header {
                 padding: 0.6rem 1rem;
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: nowrap;
             }
-            .header-left { justify-content: center; }
+            .header-left {
+                flex: 1;
+                justify-content: flex-start;
+                gap: 0.3rem;
+            }
             .age-restriction { font-size: 0.6rem; padding: 0.15rem 0.3rem; }
-            .avatar { width: 40px; height: 40px; }
-            h1 { font-size: 1rem; }
-            .stats { font-size: 0.6rem; }
-            .social-header { justify-content: center; margin-top: 0.5rem; }
-            .menu-icon { margin: 0 auto; }
+            .avatar { width: 36px; height: 36px; }
+            h1 { font-size: 0.85rem; }
+            .stats { font-size: 0.5rem; padding: 0.1rem 0.5rem; }
+            
+            /* Бургер в левом углу */
+            .menu-icon {
+                order: -1;
+                margin: 0;
+            }
+            
+            /* Социальные кнопки скрываем на телефонах */
+            .social-header {
+                display: none;
+            }
             
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
@@ -755,9 +798,8 @@
             .progress-bar-container { height: 8px; }
             
             .download-track-btn {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.75rem;
-                background: rgba(16, 185, 129, 0.3);
+                padding: 0.3rem 0.7rem;
+                font-size: 0.7rem;
             }
             
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
@@ -775,6 +817,11 @@
             .author-menu {
                 width: 100%;
                 left: -100%;
+            }
+            
+            .singer-photo {
+                width: 150px;
+                height: 150px;
             }
         }
     </style>
@@ -803,6 +850,9 @@
     <div class="main-content">
         <div class="sticky-header">
             <div class="glass-header">
+                <div class="menu-icon" id="menuIcon">
+                    <span></span><span></span><span></span>
+                </div>
                 <div class="header-left">
                     <div class="age-restriction">16+</div>
                     <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
@@ -818,9 +868,6 @@
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z" fill="white"/>
                         </svg>
                     </a>
-                </div>
-                <div class="menu-icon" id="menuIcon">
-                    <span></span><span></span><span></span>
                 </div>
             </div>
         </div>
@@ -861,12 +908,16 @@
 <div id="authorMenu" class="author-menu">
     <div class="close-menu" id="closeMenu">✕</div>
     
+    <div class="menu-header">
+        <h3 class="menu-title">🎤 Исполнители</h3>
+    </div>
+    
     <div id="artistsList" class="author-list">
-        <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg")'>
+        <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "АБТ")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Андрей Тришин</div>
         </div>
-        <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg")'>
+        <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "АТ")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Алексей Тамарёв</div>
         </div>
@@ -878,6 +929,7 @@
         <button class="close-modal" onclick="closeSingerModal()">✕</button>
         <img id="singerPhoto" class="singer-photo" src="" alt="">
         <h3 id="singerName" class="singer-name"></h3>
+        <div id="singerInitials" class="singer-initials"></div>
         <p id="singerDescription" class="singer-description"></p>
     </div>
 </div>
@@ -904,7 +956,6 @@
 </div>
 
 <script>
-    // Supabase initialization
     const supabaseClient = window.supabase.createClient(
         'https://efaqqrfkxxgfsxndmyit.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
@@ -1323,11 +1374,11 @@
 
     function escapeHtml(str) { return str ? str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ========== МОДАЛЬНЫЕ ОКНА ==========
-    function showSingerCard(name, description, imageUrl) {
+    function showSingerCard(name, description, imageUrl, initials) {
         const modal = document.getElementById('singerModal');
         document.getElementById('singerPhoto').src = imageUrl;
         document.getElementById('singerName').innerText = name;
+        document.getElementById('singerInitials').innerText = initials || '';
         document.getElementById('singerDescription').innerText = description;
         modal.style.display = 'flex';
         const authorMenu = document.getElementById('authorMenu');
@@ -1352,7 +1403,6 @@
         else counter.classList.remove('warning');
     });
 
-    // Burger menu open/close
     const menuIcon = document.getElementById('menuIcon');
     const authorMenu = document.getElementById('authorMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
