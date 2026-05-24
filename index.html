@@ -39,7 +39,7 @@
             position: sticky;
             top: 20px;
             z-index: 100;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto 1.5rem auto;
         }
         .glass-header {
@@ -106,7 +106,7 @@
             font-size: 0.8rem;
         }
         .main-content {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         .admin-panel {
@@ -136,13 +136,12 @@
             cursor: pointer;
         }
         
-        /* КОМПАКТНАЯ СЕТКА */
-        .track-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.2rem;
+        /* КАРТОЧКА ТРЕКА ПО СХЕМЕ */
+        .track-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
         }
-        
         .track-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
@@ -150,23 +149,32 @@
             padding: 0.8rem;
             transition: all 0.2s ease;
             border: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 0.8rem;
         }
         .track-card:hover {
             background: rgba(0, 0, 0, 0.8);
-            transform: translateY(-3px);
         }
         
-        /* УМЕНЬШЕННАЯ АВАТАРКА С КНОПКОЙ PLAY */
+        /* ЛЕВАЯ КОЛОНКА (АВАТАРКА + ТАЙМИНГ) */
+        .track-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            width: 70px;
+            flex-shrink: 0;
+        }
         .cover-container {
             position: relative;
-            width: 100%;
-            max-width: 140px;
-            margin: 0 auto;
+            width: 70px;
+            height: 70px;
         }
         .track-cover {
             width: 100%;
-            aspect-ratio: 1 / 1;
+            height: 100%;
             border-radius: 0.8rem;
             object-fit: cover;
             border: 1px solid rgba(255,255,255,0.2);
@@ -178,8 +186,8 @@
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(4px);
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -193,40 +201,88 @@
             transform: translate(-50%, -50%) scale(1.05);
         }
         .play-overlay span {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: white;
         }
+        .track-duration {
+            font-size: 0.7rem;
+            color: #cbd5e1;
+        }
         
-        /* ТЕКСТ */
+        /* ПРАВАЯ КОЛОНКА (ИНФО + УПРАВЛЕНИЕ) */
+        .track-right {
+            flex: 1;
+            min-width: 180px;
+        }
         .track-title {
             font-size: 1rem;
             font-weight: 700;
             color: white;
-            margin-top: 0.6rem;
             margin-bottom: 0.2rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         .track-artist {
             font-size: 0.8rem;
             color: #a0aec0;
-            margin-bottom: 0.3rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .track-duration {
-            font-size: 0.75rem;
-            color: #cbd5e1;
             margin-bottom: 0.5rem;
         }
         
-        /* ЛАЙК И УДАЛЕНИЕ */
+        /* ПОЛЗУНОК ГРОМКОСТИ (появляется при воспроизведении) */
+        .volume-control {
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
+        }
+        .volume-control.visible {
+            display: flex;
+        }
+        .volume-icon {
+            font-size: 0.7rem;
+            color: white;
+        }
+        .volume-slider {
+            width: 100px;
+            height: 3px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        
+        /* ПРОГРЕСС-БАР (появляется при воспроизведении) */
+        .progress-control {
+            display: none;
+            margin-bottom: 0.5rem;
+        }
+        .progress-control.visible {
+            display: block;
+        }
+        .progress-bar-container {
+            background: rgba(255,255,255,0.2);
+            border-radius: 1rem;
+            height: 4px;
+            cursor: pointer;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #3b82f6, #a855f7);
+            border-radius: 1rem;
+            height: 100%;
+            width: 0%;
+        }
+        
+        /* ЛАЙК */
         .likes-row {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
             gap: 0.5rem;
             margin-top: 0.3rem;
         }
@@ -380,17 +436,14 @@
             .stats { font-size: 0.6rem; }
             .user-info { justify-content: center; font-size: 0.7rem; }
             
-            .track-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 0.8rem;
-            }
-            .cover-container { max-width: 100px; }
-            .play-overlay { width: 32px; height: 32px; }
-            .play-overlay span { font-size: 1rem; }
-            .track-title { font-size: 0.85rem; }
+            .track-left { width: 60px; }
+            .cover-container { width: 60px; height: 60px; }
+            .play-overlay { width: 28px; height: 28px; }
+            .play-overlay span { font-size: 0.8rem; }
+            
+            .track-title { font-size: 0.9rem; }
             .track-artist { font-size: 0.7rem; }
-            .track-duration { font-size: 0.65rem; }
-            .like-btn-card { padding: 0.15rem 0.5rem; font-size: 0.65rem; }
+            .volume-slider { width: 80px; }
             
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
@@ -429,7 +482,7 @@
         <button id="addTrackBtn">Добавить</button>
         <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
     </div>
-    <div id="trackList" class="track-grid"></div>
+    <div id="trackList" class="track-list"></div>
     <div class="comments-section">
         <h2>💬 Обсуждение</h2>
         <div id="commentsList"></div>
@@ -613,22 +666,33 @@
         let html = '';
         data.forEach((track, index) => {
             const isLiked = userLikes.includes(track.id);
-            // Получаем длительность трека (если есть в метаданных)
-            const duration = track.duration ? formatTime(track.duration) : '--:--';
             html += `
                 <div class="track-card" data-track-id="${track.id}" data-index="${index}">
-                    <div class="cover-container">
-                        <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/140x140/2b2b4f/white?text=🎵'">
-                        <div class="play-overlay" data-play-index="${index}">
-                            <span>▶</span>
+                    <div class="track-left">
+                        <div class="cover-container">
+                            <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
+                            <div class="play-overlay" data-play-index="${index}">
+                                <span>▶</span>
+                            </div>
                         </div>
+                        <div class="track-duration" id="duration-${track.id}">--:--</div>
                     </div>
-                    <div class="track-title">${escapeHtml(track.title)}</div>
-                    <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
-                    <div class="track-duration" id="duration-${track.id}">${duration}</div>
-                    <div class="likes-row">
-                        <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
-                        ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
+                    <div class="track-right">
+                        <div class="track-title">${escapeHtml(track.title)}</div>
+                        <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
+                        <div class="volume-control" id="volume-${track.id}">
+                            <span class="volume-icon">🔊</span>
+                            <input type="range" class="volume-slider" min="0" max="100" value="70">
+                        </div>
+                        <div class="progress-control" id="progress-${track.id}">
+                            <div class="progress-bar-container">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="likes-row">
+                            <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
+                            ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
+                        </div>
                     </div>
                     <audio style="display:none;" id="audio-${track.id}" preload="metadata">
                         <source src="${track.file_url}" type="audio/mpeg">
@@ -656,40 +720,85 @@
         const audio = document.getElementById(`audio-${trackId}`);
         const playBtn = document.querySelector(`.play-overlay[data-play-index="${index}"]`);
         const durationSpan = document.getElementById(`duration-${trackId}`);
+        const volumeControl = document.getElementById(`volume-${trackId}`);
+        const progressControl = document.getElementById(`progress-${trackId}`);
+        const progressFill = progressControl?.querySelector('.progress-fill');
+        const progressBar = progressControl?.querySelector('.progress-bar-container');
+        const volumeSlider = volumeControl?.querySelector('.volume-slider');
+        const volumeIcon = volumeControl?.querySelector('.volume-icon');
         
         if (!audio || !playBtn) return;
         
         let isPlaying = false;
         
-        // Получаем длительность трека
         audio.addEventListener('loadedmetadata', () => {
             if (durationSpan && !isNaN(audio.duration)) {
-                durationSpan.textContent = formatTime(audio.duration);
+                const mins = Math.floor(audio.duration / 60);
+                const secs = Math.floor(audio.duration % 60);
+                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
             }
         });
+        
+        audio.addEventListener('timeupdate', () => {
+            if (isPlaying && progressFill && audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = `${percent}%`;
+            }
+        });
+        
+        if (progressBar) {
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                audio.currentTime = percent * audio.duration;
+            });
+        }
         
         playBtn.addEventListener('click', () => {
             if (isPlaying) {
                 audio.pause();
                 playBtn.innerHTML = '<span>▶</span>';
+                if (volumeControl) volumeControl.classList.remove('visible');
+                if (progressControl) progressControl.classList.remove('visible');
             } else {
                 document.querySelectorAll('audio').forEach(a => {
                     if (a !== audio && !a.paused) {
                         a.pause();
-                        const btn = document.querySelector(`.play-overlay[data-play-index="${a.id?.replace('audio-', '')}"]`);
-                        if (btn) btn.innerHTML = '<span>▶</span>';
+                        const idx = a.id?.replace('audio-', '');
+                        const otherPlayBtn = document.querySelector(`.play-overlay[data-play-index="${idx}"]`);
+                        if (otherPlayBtn) otherPlayBtn.innerHTML = '<span>▶</span>';
+                        const otherVolume = document.getElementById(`volume-${idx}`);
+                        const otherProgress = document.getElementById(`progress-${idx}`);
+                        if (otherVolume) otherVolume.classList.remove('visible');
+                        if (otherProgress) otherProgress.classList.remove('visible');
                     }
                 });
                 audio.play();
                 playBtn.innerHTML = '<span>⏸</span>';
+                if (volumeControl) volumeControl.classList.add('visible');
+                if (progressControl) progressControl.classList.add('visible');
             }
             isPlaying = !isPlaying;
         });
         
         audio.addEventListener('ended', () => {
             playBtn.innerHTML = '<span>▶</span>';
+            if (volumeControl) volumeControl.classList.remove('visible');
+            if (progressControl) progressControl.classList.remove('visible');
             isPlaying = false;
         });
+        
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                audio.volume = e.target.value / 100;
+                if (volumeIcon) {
+                    if (audio.volume === 0) volumeIcon.textContent = '🔇';
+                    else if (audio.volume < 0.5) volumeIcon.textContent = '🔉';
+                    else volumeIcon.textContent = '🔊';
+                }
+            });
+            audio.volume = 0.7;
+        }
     }
 
     async function deleteTrack(id) {
@@ -753,13 +862,6 @@
         const { count: tracksCount } = await supabaseClient.from('tracks').select('*', { count: 'exact', head: true });
         const { count: commentsCount } = await supabaseClient.from('comments').select('*', { count: 'exact', head: true });
         document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
-    }
-
-    function formatTime(sec) { 
-        if (isNaN(sec)) return '00:00'; 
-        const m = Math.floor(sec / 60); 
-        const s = Math.floor(sec % 60); 
-        return `${m}:${s.toString().padStart(2, '0')}`; 
     }
 
     function escapeHtml(str) { 
