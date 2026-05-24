@@ -39,7 +39,7 @@
             position: sticky;
             top: 20px;
             z-index: 100;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto 1.5rem auto;
         }
         .glass-header {
@@ -106,7 +106,7 @@
             font-size: 0.8rem;
         }
         .main-content {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         .admin-panel {
@@ -136,98 +136,150 @@
             cursor: pointer;
         }
         
-        /* НОВАЯ КАРТОЧКА ТРЕКА В СТИЛЕ ЯНДЕКС МУЗЫКИ */
-        .track-card {
-            display: flex;
+        /* СЕТКА ТРЕКОВ (2-3 в строку) */
+        .track-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1rem;
+        }
+        
+        /* КАРТОЧКА ТРЕКА (как плитка) */
+        .track-card {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
             border-radius: 1rem;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
+            padding: 1rem;
             transition: all 0.2s ease;
             border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
         .track-card:hover {
             background: rgba(0, 0, 0, 0.8);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+        }
+        
+        /* КОНТЕЙНЕР С АВАТАРКОЙ И КНОПКОЙ PLAY ПО ЦЕНТРУ */
+        .cover-container {
+            position: relative;
+            width: 100%;
+            max-width: 180px;
+            margin: 0 auto;
         }
         .track-cover {
-            width: 70px;
-            height: 70px;
-            border-radius: 0.6rem;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 0.8rem;
             object-fit: cover;
-            flex-shrink: 0;
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .track-info {
-            flex: 1;
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
         }
+        .play-overlay:hover {
+            background: #3b82f6;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        .play-overlay span {
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        /* ИНФОРМАЦИЯ О ТРЕКЕ */
         .track-title {
             font-size: 1rem;
             font-weight: 700;
             color: white;
+            margin-top: 0.8rem;
             margin-bottom: 0.2rem;
+            word-break: break-word;
         }
         .track-artist {
             font-size: 0.8rem;
             color: #a0aec0;
+            margin-bottom: 0.5rem;
         }
-        .track-controls {
+        
+        /* ПОЛЗУНОК ГРОМКОСТИ (рядом с аватаркой) */
+        .volume-control-card {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+        .volume-icon-card {
+            font-size: 0.8rem;
+            color: white;
+        }
+        .volume-slider-card {
+            width: 80px;
+            height: 3px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+        .volume-slider-card::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        
+        /* ЛАЙК И ВРЕМЯ (тайминг появляется только при воспроизведении) */
+        .likes-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
             margin-top: 0.5rem;
             flex-wrap: wrap;
         }
-        .play-btn-small {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        .like-btn-small {
+        .like-btn-card {
             background: transparent;
             border: 1px solid #ef4444;
             color: #ef4444;
-            padding: 0.2rem 0.6rem;
+            padding: 0.2rem 0.8rem;
             border-radius: 1.5rem;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
         }
-        .like-btn-small.liked {
+        .like-btn-card.liked {
             background: #ef4444;
             color: white;
         }
-        .progress-small {
-            flex: 1;
-            min-width: 120px;
-        }
-        .progress-bar-small {
-            background: rgba(255,255,255,0.2);
-            border-radius: 1rem;
-            height: 4px;
-            cursor: pointer;
-        }
-        .progress-fill-small {
-            background: linear-gradient(90deg, #3b82f6, #a855f7);
-            border-radius: 1rem;
-            height: 100%;
-            width: 0%;
-        }
-        .time-small {
-            font-size: 0.6rem;
+        .time-card {
+            font-size: 0.7rem;
             color: #a0aec0;
-            margin-left: 0.5rem;
+            background: rgba(0,0,0,0.5);
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            display: none;
         }
-        .delete-track-btn-small {
+        .time-card.visible {
+            display: inline-block;
+        }
+        .delete-track-card {
             background: #ef4444;
             border: none;
             color: white;
@@ -235,6 +287,7 @@
             border-radius: 1rem;
             cursor: pointer;
             font-size: 0.7rem;
+            margin-left: 0.5rem;
         }
         
         .comments-section { margin-top: 2rem; }
@@ -355,12 +408,7 @@
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
             .user-info { justify-content: center; }
-            .track-card { gap: 0.5rem; }
-            .track-cover { width: 50px; height: 50px; }
-            .track-title { font-size: 0.9rem; }
-            .track-artist { font-size: 0.7rem; }
-            .play-btn-small { width: 28px; height: 28px; font-size: 0.7rem; }
-            .progress-small { min-width: 80px; }
+            .track-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -388,7 +436,6 @@
 </div>
 
 <div class="main-content">
-    <!-- АДМИН-ПАНЕЛЬ С РАЗДЕЛЬНЫМИ ПОЛЯМИ -->
     <div id="adminPanel" class="admin-panel" style="display: none;">
         <h2>➕ Добавить трек</h2>
         <input type="text" id="trackTitle" placeholder="Название трека">
@@ -397,7 +444,7 @@
         <button id="addTrackBtn">Добавить</button>
         <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
     </div>
-    <div id="trackList"></div>
+    <div id="trackList" class="track-grid"></div>
     <div class="comments-section">
         <h2>💬 Обсуждение</h2>
         <div id="commentsList"></div>
@@ -424,7 +471,6 @@
 </div>
 
 <script>
-    // ========== SUPABASE ==========
     const supabaseClient = window.supabase.createClient(
         'https://efaqqrfkxxgfsxndmyit.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
@@ -526,7 +572,6 @@
         else register(email, pass);
     };
 
-    // ========== ЛАЙКИ ==========
     async function likeTrack(trackId) {
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
@@ -560,7 +605,6 @@
         }
     }
 
-    // ========== ОСНОВНАЯ ФУНКЦИЯ ЗАГРУЗКИ ТРЕКОВ (С КАРТОЧКАМИ) ==========
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
@@ -585,22 +629,25 @@
         data.forEach((track, index) => {
             const isLiked = userLikes.includes(track.id);
             html += `
-                <div class="track-card" data-track-id="${track.id}">
-                    <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
-                    <div class="track-info">
-                        <div class="track-title">${escapeHtml(track.title)}</div>
-                        <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
-                        <div class="track-controls">
-                            <button class="play-btn-small" data-index="${index}">▶</button>
-                            <button class="like-btn-small ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
-                            <div class="progress-small">
-                                <div class="progress-bar-small">
-                                    <div class="progress-fill-small" id="progress-fill-${track.id}"></div>
-                                </div>
-                            </div>
-                            <span class="time-small" id="time-${track.id}">00:00 / 00:00</span>
-                            ${isAdmin ? `<button class="delete-track-btn-small" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
+                <div class="track-card" data-track-id="${track.id}" data-index="${index}">
+                    <div class="cover-container">
+                        <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/180x180/2b2b4f/white?text=🎵'">
+                        <div class="play-overlay" data-play-index="${index}">
+                            <span>▶</span>
                         </div>
+                    </div>
+                    <div class="track-title">${escapeHtml(track.title)}</div>
+                    <div class="track-artist">${escapeHtml(track.artist || 'Неизвестный исполнитель')}</div>
+                    
+                    <div class="volume-control-card">
+                        <span class="volume-icon-card">🔊</span>
+                        <input type="range" class="volume-slider-card" min="0" max="100" value="70">
+                    </div>
+                    
+                    <div class="likes-row">
+                        <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${track.likes || 0}</button>
+                        <span class="time-card" id="time-${track.id}">00:00 / 00:00</span>
+                        ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
                     </div>
                     <audio style="display:none;" id="audio-${track.id}" preload="metadata">
                         <source src="${track.file_url}" type="audio/mpeg">
@@ -610,11 +657,13 @@
         });
         container.innerHTML = html;
         
+        // Инициализация плееров
         data.forEach((track, index) => {
             initPlayerForTrack(track.id, index);
         });
         
-        document.querySelectorAll('.like-btn-small').forEach(btn => {
+        // Инициализация лайков
+        document.querySelectorAll('.like-btn-card').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
                 likeTrack(parseInt(btn.dataset.id));
@@ -626,61 +675,76 @@
     
     function initPlayerForTrack(trackId, index) {
         const audio = document.getElementById(`audio-${trackId}`);
-        const playBtn = document.querySelector(`.play-btn-small[data-index="${index}"]`);
-        const progressBar = document.querySelector(`#progress-fill-${trackId}`)?.parentElement;
-        const progressFill = document.querySelector(`#progress-fill-${trackId}`);
+        const playBtn = document.querySelector(`.play-overlay[data-play-index="${index}"]`);
         const timeSpan = document.getElementById(`time-${trackId}`);
+        const volumeSlider = document.querySelector(`.volume-slider-card`);
+        const volumeIcon = document.querySelector(`.volume-icon-card`);
         
         if (!audio || !playBtn) return;
         
         let isPlaying = false;
         
         audio.addEventListener('loadedmetadata', () => {
-            updateTimeDisplay();
+            if (timeSpan && !isPlaying) {
+                timeSpan.classList.remove('visible');
+            }
         });
         
         audio.addEventListener('timeupdate', () => {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            if (progressFill) progressFill.style.width = `${percent}%`;
-            updateTimeDisplay();
+            if (timeSpan && isPlaying) {
+                timeSpan.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+            }
         });
         
         function updateTimeDisplay() {
-            if (timeSpan) {
+            if (timeSpan && isPlaying) {
                 timeSpan.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
             }
-        }
-        
-        if (progressBar) {
-            progressBar.addEventListener('click', (e) => {
-                const rect = progressBar.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                audio.currentTime = percent * audio.duration;
-            });
         }
         
         playBtn.addEventListener('click', () => {
             if (isPlaying) {
                 audio.pause();
-                playBtn.textContent = '▶';
+                playBtn.innerHTML = '<span>▶</span>';
+                if (timeSpan) timeSpan.classList.remove('visible');
             } else {
                 document.querySelectorAll('audio').forEach(a => {
                     if (a !== audio && !a.paused) {
                         a.pause();
-                        const btn = document.querySelector(`.play-btn-small[data-audio-id="${a.id}"]`);
-                        if (btn) btn.textContent = '▶';
+                        const btn = document.querySelector(`.play-overlay[data-play-index="${a.id?.replace('audio-', '')}"]`);
+                        if (btn) btn.innerHTML = '<span>▶</span>';
+                        const tSpan = document.getElementById(`time-${a.id?.replace('audio-', '')}`);
+                        if (tSpan) tSpan.classList.remove('visible');
                     }
                 });
                 audio.play();
-                playBtn.textContent = '⏸';
+                playBtn.innerHTML = '<span>⏸</span>';
+                if (timeSpan) {
+                    timeSpan.classList.add('visible');
+                    updateTimeDisplay();
+                }
             }
             isPlaying = !isPlaying;
         });
         
         audio.addEventListener('ended', () => {
-            playBtn.textContent = '▶';
+            playBtn.innerHTML = '<span>▶</span>';
+            if (timeSpan) timeSpan.classList.remove('visible');
             isPlaying = false;
         });
+        
+        // Громкость
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                audio.volume = e.target.value / 100;
+                if (volumeIcon) {
+                    if (audio.volume === 0) volumeIcon.textContent = '🔇';
+                    else if (audio.volume < 0.5) volumeIcon.textContent = '🔉';
+                    else volumeIcon.textContent = '🔊';
+                }
+            });
+            audio.volume = 0.7;
+        }
     }
 
     async function deleteTrack(id) {
