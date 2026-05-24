@@ -37,7 +37,6 @@
             padding: 20px;
         }
         
-        /* Кнопки авторизации в правом верхнем углу */
         .auth-buttons-top {
             position: fixed;
             top: 20px;
@@ -974,7 +973,7 @@
                 <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
                 <div class="author-name">Андрей Тришин</div>
             </div>
-            <div class="author-item" onclick="showSingerCard('Алексей Тамарёв', 'Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".', 'https://github.com/geratiina/singers/raw/main/AlexeyT.jpg')">
+            <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg")'>
                 <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
                 <div class="author-name">Алексей Тамарёв</div>
             </div>
@@ -1038,6 +1037,7 @@
 </div>
 
 <script>
+    // Supabase initialization
     const supabaseClient = window.supabase.createClient(
         'https://efaqqrfkxxgfsxndmyit.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmYXFxcmZreHhnZnN4bmRteWl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MTMxMDQsImV4cCI6MjA5NTA4OTEwNH0.72YBkhIuYy_2agG8gbXxOpC4JpG__rWQvbJpK4WMugs'
@@ -1048,6 +1048,7 @@
     let deviceFingerprint = null;
     let currentAuthMode = 'login';
 
+    // Helper functions
     const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
     function containsBadWords(text) {
         if (!text) return false;
@@ -1082,6 +1083,7 @@
         }
     }
 
+    // Download track
     async function downloadTrack(button) {
         const url = button.dataset.url;
         const fileName = button.dataset.title + '.mp3';
@@ -1101,6 +1103,7 @@
         }
     }
 
+    // Auth UI
     function showLoggedOutUI() {
         document.getElementById('userPanelName').innerText = 'Гость';
         const panelRole = document.getElementById('userPanelRole');
@@ -1228,6 +1231,7 @@
         else register(email, pass, username);
     };
 
+    // Likes
     async function likeTrack(trackId) {
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
@@ -1243,6 +1247,7 @@
         loadTracks();
     }
 
+    // Comments
     async function loadComments() {
         const container = document.getElementById('commentsList');
         const { data: comments, error } = await supabaseClient.from('comments').select('id, text, created_at, user_id').order('created_at', { ascending: false });
@@ -1289,6 +1294,7 @@
         }
     }
 
+    // Tracks (музыка)
     async function loadTracks() {
         const container = document.getElementById('trackList');
         container.innerHTML = '<div class="empty-message">⏳ Загрузка...</div>';
@@ -1516,7 +1522,7 @@
         else counter.classList.remove('warning');
     });
 
-    // Переключение вкладок
+    // Tabs in burger menu
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabsContent = {
         artists: document.getElementById('artistsTab'),
@@ -1538,7 +1544,7 @@
         });
     });
 
-    // Бургер-меню
+    // Burger menu open/close
     const menuIcon = document.getElementById('menuIcon');
     const authorMenu = document.getElementById('authorMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
