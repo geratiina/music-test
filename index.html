@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <style>
-        /* Стили остаются без изменений (такие же, как в прошлый раз) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         .video-background {
@@ -38,12 +37,58 @@
             padding: 20px;
         }
         
+        /* НОВАЯ СТРУКТУРА: сайт в центре, реклама по бокам */
+        .site-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* ЛЕВЫЙ И ПРАВЫЙ БЛОКИ ДЛЯ РЕКЛАМЫ */
+        .ad-sidebar {
+            width: 160px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+            align-self: flex-start;
+        }
+        .ad-block {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 1rem;
+        }
+        .ad-block p {
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .ad-block a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+        .ad-block a:hover {
+            text-decoration: underline;
+        }
+        
+        /* ОСНОВНОЙ КОНТЕНТ УЖЕ */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            max-width: 800px;
+        }
+        
         .sticky-header {
             position: sticky;
             top: 20px;
             z-index: 100;
-            max-width: 1000px;
-            margin: 0 auto 1.5rem auto;
+            margin-bottom: 1.5rem;
         }
         .glass-header {
             background: rgba(0, 0, 0, 0.65);
@@ -73,7 +118,7 @@
             text-align: left;
         }
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ffffff, #e0e7ff);
             -webkit-background-clip: text;
@@ -88,6 +133,29 @@
             font-size: 0.7rem;
             color: white;
             display: inline-block;
+        }
+        
+        /* СОЦИАЛЬНЫЕ КНОПКИ В ШАПКЕ */
+        .social-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+        .social-icon:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.2);
         }
         
         .user-info {
@@ -117,10 +185,6 @@
             opacity: 0.9;
         }
         
-        .main-content {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
         .admin-panel {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
@@ -337,7 +401,7 @@
         }
         .comments-section h2 {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             margin-bottom: 1rem;
             color: white;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -406,25 +470,7 @@
             margin-bottom: 0.5rem;
         }
         .char-counter.warning { color: #ef4444; }
-        .social-buttons {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            z-index: 1000;
-        }
-        .social-btn {
-            padding: 0.5rem 1.2rem;
-            border-radius: 3rem;
-            text-decoration: none;
-            color: white;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        .vk-btn { background: rgba(45, 62, 90, 0.9); }
-        .tg-btn { background: rgba(0, 136, 204, 0.9); }
+        
         .empty-message { text-align: center; padding: 2rem; color: white; }
 
         .modal {
@@ -505,6 +551,17 @@
         
         @media (max-width: 768px) {
             body { padding: 10px; }
+            .site-wrapper { flex-direction: column; }
+            .ad-sidebar {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                gap: 0.8rem;
+                width: 100%;
+                position: static;
+                margin-bottom: 1rem;
+            }
+            .ad-block { width: auto; flex: 1; }
             .sticky-header { top: 10px; }
             .glass-header {
                 padding: 0.6rem 1rem;
@@ -514,9 +571,10 @@
             }
             .header-left { justify-content: center; }
             .avatar { width: 40px; height: 40px; }
-            h1 { font-size: 1.1rem; }
+            h1 { font-size: 1rem; }
             .stats { font-size: 0.6rem; }
             .user-info { justify-content: center; font-size: 0.7rem; }
+            .social-header { justify-content: center; }
             
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
@@ -530,7 +588,7 @@
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
             
-            .comments-section h2 { font-size: 1.2rem; }
+            .comments-section h2 { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -541,49 +599,68 @@
 </video>
 <div class="overlay"></div>
 
-<div class="sticky-header">
-    <div class="glass-header">
-        <div class="header-left">
-            <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
-            <div class="title-stats">
-                <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68 (ТЕСТ)</h1>
-                <div class="stats" id="statsPanel">📊 загрузка...</div>
-            </div>
-        </div>
-        <div class="user-info" id="userInfo">
-            <span id="userEmail">Гость</span>
-            <div id="authButtons" style="display: flex; gap: 0.5rem;">
-                <button id="loginBtn" class="auth-btn">Вход</button>
-                <button id="registerBtn" class="auth-btn">Регистрация</button>
-                <button id="logoutBtn" class="auth-btn" style="display: none; background: #ef4444;">Выйти</button>
-            </div>
+<div class="site-wrapper">
+    <!-- ЛЕВАЯ РЕКЛАМА -->
+    <div class="ad-sidebar">
+        <div class="ad-block">
+            <p>📢 Здесь могла быть ваша реклама</p>
+            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
         </div>
     </div>
-</div>
-
-<div class="main-content">
-    <div id="adminPanel" class="admin-panel" style="display: none;">
-        <h2>➕ Добавить трек</h2>
-        <input type="text" id="trackTitle" placeholder="Название трека">
-        <input type="text" id="trackArtist" placeholder="Исполнитель">
-        <input type="text" id="trackUrl" placeholder="https://audio.jukehost.co.uk/...">
-        <button id="addTrackBtn">Добавить</button>
-        <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
-    </div>
-    <div id="trackList" class="track-list"></div>
     
-    <div class="comments-section">
-        <h2>💬 Комментарии</h2>
-        <div id="commentsList"></div>
-        <textarea id="commentInput" rows="2" placeholder="Напиши свой комментарий... (до 250 символов)"></textarea>
-        <div id="charCounter" class="char-counter">0 / 250</div>
-        <button id="sendCommentBtn" class="send-btn">📝 Отправить</button>
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div class="main-content">
+        <div class="sticky-header">
+            <div class="glass-header">
+                <div class="header-left">
+                    <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
+                    <div class="title-stats">
+                        <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
+                        <div class="stats" id="statsPanel">📊 загрузка...</div>
+                    </div>
+                </div>
+                <div class="social-header">
+                    <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon">📱</a>
+                    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon">✈️</a>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <span id="userEmail">Гость</span>
+                    <div id="authButtons" style="display: flex; gap: 0.5rem;">
+                        <button id="loginBtn" class="auth-btn">Вход</button>
+                        <button id="registerBtn" class="auth-btn">Регистрация</button>
+                        <button id="logoutBtn" class="auth-btn" style="display: none; background: #ef4444;">Выйти</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="adminPanel" class="admin-panel" style="display: none;">
+            <h2>➕ Добавить трек</h2>
+            <input type="text" id="trackTitle" placeholder="Название трека">
+            <input type="text" id="trackArtist" placeholder="Исполнитель">
+            <input type="text" id="trackUrl" placeholder="https://audio.jukehost.co.uk/...">
+            <button id="addTrackBtn">Добавить</button>
+            <div id="uploadStatus" style="color:#a5f3fc; margin-top:0.5rem;"></div>
+        </div>
+        
+        <div id="trackList" class="track-list"></div>
+        
+        <div class="comments-section">
+            <h2>💬 Комментарии</h2>
+            <div id="commentsList"></div>
+            <textarea id="commentInput" rows="2" placeholder="Напиши свой комментарий... (до 250 символов)"></textarea>
+            <div id="charCounter" class="char-counter">0 / 250</div>
+            <button id="sendCommentBtn" class="send-btn">📝 Отправить</button>
+        </div>
     </div>
-</div>
-
-<div class="social-buttons">
-    <a href="https://vk.com/mzproect_68" target="_blank" class="social-btn vk-btn">📱 ВКонтакте</a>
-    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-btn tg-btn">✈️ Telegram</a>
+    
+    <!-- ПРАВАЯ РЕКЛАМА -->
+    <div class="ad-sidebar">
+        <div class="ad-block">
+            <p>📢 Здесь могла быть ваша реклама</p>
+            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
+        </div>
+    </div>
 </div>
 
 <div id="authModal" class="modal">
@@ -596,7 +673,7 @@
             <span class="password-toggle" onclick="togglePassword('authPassword', this)">👁️</span>
         </div>
         
-        <input type="text" id="authUsername" placeholder="Логин (только латиница, до 8 символов)" style="display: none;">
+        <input type="text" id="authUsername" placeholder="Логин (только латиница, 3-8 символов)" style="display: none;">
         
         <button id="submitAuthBtn">Войти</button>
         <button class="close" onclick="closeModal()">Закрыть</button>
@@ -633,7 +710,7 @@
     }
 
     function isValidUsername(username) {
-        const regex = /^[a-zA-Z]{1,8}$/;
+        const regex = /^[a-zA-Z]{3,8}$/;
         return regex.test(username);
     }
 
@@ -703,40 +780,63 @@
     }
 
     async function login(email, password) {
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) return alert('Ошибка входа: ' + error.message);
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        
+        if (error) {
+            if (error.message.includes('Invalid login credentials')) {
+                alert('❌ Такой учётной записи нет. Проверьте email или пароль.');
+            } else {
+                alert('Ошибка входа: ' + error.message);
+            }
+            return;
+        }
+        
         closeModal();
         checkAuth();
     }
 
     async function register(email, password, username) {
         if (!username || username.trim() === '') {
-            alert('Логин обязателен для заполнения');
+            alert('❌ Логин обязателен для заполнения');
             return;
         }
+        
         if (!isValidUsername(username)) {
-            alert('Логин должен содержать только латинские буквы (A-Z) и быть не длиннее 8 символов');
+            alert('❌ Логин должен содержать только латинские буквы (A-Z) и быть длиной от 3 до 8 символов');
             return;
         }
-        const { data: existing } = await supabaseClient
+        
+        const { data: existing, error: checkError } = await supabaseClient
             .from('profiles')
             .select('username')
             .eq('username', username)
             .maybeSingle();
+        
         if (existing) {
-            alert('Этот логин уже занят. Придумайте другой.');
+            alert('❌ Этот логин уже занят. Придумайте другой.');
             return;
         }
+        
         const { data, error } = await supabaseClient.auth.signUp({ 
             email, 
             password,
             options: { data: { username: username } }
         });
-        if (error) return alert('Ошибка регистрации: ' + error.message);
+        
+        if (error) {
+            if (error.message.includes('User already registered')) {
+                alert('❌ Пользователь с таким email уже зарегистрирован');
+            } else {
+                alert('Ошибка регистрации: ' + error.message);
+            }
+            return;
+        }
+        
         if (data.user) {
             await supabaseClient.from('profiles').update({ username: username }).eq('id', data.user.id);
         }
-        alert('Регистрация успешна! Теперь войдите.');
+        
+        alert('✅ Регистрация успешна! Теперь войдите.');
         toggleToLogin();
     }
 
@@ -768,7 +868,7 @@
         document.getElementById('modalTitle').innerText = 'Регистрация';
         document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
         document.getElementById('authUsername').style.display = 'block';
-        document.getElementById('authUsername').placeholder = 'Логин (обязательно, только латиница, до 8 символов)';
+        document.getElementById('authUsername').placeholder = 'Логин (только латиница, 3-8 символов)';
         openModal();
     };
 
