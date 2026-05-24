@@ -10,8 +10,28 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: blur(5px);
+            transform: scale(1.01);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+        
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             padding: 20px;
@@ -118,7 +138,6 @@
             cursor: pointer;
         }
         
-        /* КАРТОЧКА ТРЕКА */
         .track-list {
             display: flex;
             flex-direction: column;
@@ -303,7 +322,6 @@
             color: white;
         }
         
-        /* КОММЕНТАРИИ */
         .comments-section { margin-top: 2rem; }
         .comments-section h2 {
             font-size: 1.3rem;
@@ -324,7 +342,6 @@
         }
         .comment-author {
             font-weight: bold;
-            color: #e0e7ff;
             font-size: 0.9rem;
         }
         .comment-date {
@@ -472,6 +489,11 @@
 </head>
 <body>
 
+<video class="video-background" autoplay loop muted playsinline>
+    <source src="https://github.com/geratiina/back/raw/main/background.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
 <div class="sticky-header">
     <div class="glass-header">
         <div class="header-left">
@@ -517,6 +539,7 @@
         <h2 id="modalTitle">Вход</h2>
         <input type="email" id="authEmail" placeholder="Email">
         <input type="password" id="authPassword" placeholder="Пароль">
+        <input type="text" id="authUsername" placeholder="Логин (только латиница, до 8 символов)" style="display: none;">
         <button id="submitAuthBtn">Войти</button>
         <button class="close" onclick="closeModal()">Закрыть</button>
         <div class="switch-form" onclick="toggleAuthForm()">Нет аккаунта? Зарегистрироваться</div>
@@ -552,17 +575,24 @@
         }
     }
 
+    // Проверка логина (только латиница, до 8 символов)
+    function isValidUsername(username) {
+        const regex = /^[a-zA-Z]{1,8}$/;
+        return regex.test(username);
+    }
+
     async function checkAuth() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         currentUser = user;
         if (user) {
             const { data: profile } = await supabaseClient
                 .from('profiles')
-                .select('role, email')
+                .select('role, email, username')
                 .eq('id', user.id)
                 .single();
             isAdmin = profile?.role === 'admin';
-            document.getElementById('userEmail').innerText = profile?.email || user.email;
+            const displayName = profile?.username || profile?.email || user.email;
+            document.getElementById('userEmail').innerText = displayName;
             document.getElementById('authBtn').innerText = 'Выйти';
             const adminPanel = document.getElementById('adminPanel');
             if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
@@ -584,9 +614,43 @@
         checkAuth();
     }
 
-    async function register(email, password) {
-        const { error } = await supabaseClient.auth.signUp({ email, password });
+    async function register(email, password, username) {
+        if (!isValidUsername(username)) {
+            alert('Логин должен содержать только латинские буквы (A-Z) и быть не длиннее 8 символов');
+            return;
+        }
+        
+        // Проверяем, не занят ли логин
+        const { data: existing } = await supabaseClient
+            .from('profiles')
+            .select('username')
+            .eq('username', username)
+            .maybeSingle();
+        
+        if (existing) {
+            alert('Этот логин уже занят. Придумайте другой.');
+            return;
+        }
+        
+        const { data, error } = await supabaseClient.auth.signUp({ 
+            email, 
+            password,
+            options: {
+                data: { username: username }
+            }
+        });
+        
         if (error) return alert('Ошибка регистрации: ' + error.message);
+        
+        // После регистрации обновляем профиль с логином
+        if (data.user) {
+            const { error: updateError } = await supabaseClient
+                .from('profiles')
+                .update({ username: username })
+                .eq('id', data.user.id);
+            if (updateError) console.error('Ошибка обновления профиля:', updateError);
+        }
+        
         alert('Регистрация успешна! Теперь войдите.');
         toggleAuthForm();
     }
@@ -597,19 +661,34 @@
     }
 
     const modal = document.getElementById('authModal');
-    function openModal() { modal.style.display = 'flex'; }
+    function openModal() { 
+        modal.style.display = 'flex'; 
+        const usernameField = document.getElementById('authUsername');
+        if (currentAuthMode === 'register') {
+            usernameField.style.display = 'block';
+        } else {
+            usernameField.style.display = 'none';
+        }
+    }
     function closeModal() { modal.style.display = 'none'; }
     function toggleAuthForm() {
+        const title = document.getElementById('modalTitle');
+        const submitBtn = document.getElementById('submitAuthBtn');
+        const switchText = document.querySelector('.switch-form');
+        const usernameField = document.getElementById('authUsername');
+        
         if (currentAuthMode === 'login') {
             currentAuthMode = 'register';
-            document.getElementById('modalTitle').innerText = 'Регистрация';
-            document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
-            document.querySelector('.switch-form').innerText = 'Уже есть аккаунт? Войти';
+            title.innerText = 'Регистрация';
+            submitBtn.innerText = 'Зарегистрироваться';
+            switchText.innerText = 'Уже есть аккаунт? Войти';
+            usernameField.style.display = 'block';
         } else {
             currentAuthMode = 'login';
-            document.getElementById('modalTitle').innerText = 'Вход';
-            document.getElementById('submitAuthBtn').innerText = 'Войти';
-            document.querySelector('.switch-form').innerText = 'Нет аккаунта? Зарегистрироваться';
+            title.innerText = 'Вход';
+            submitBtn.innerText = 'Войти';
+            switchText.innerText = 'Нет аккаунта? Зарегистрироваться';
+            usernameField.style.display = 'none';
         }
     }
 
@@ -622,7 +701,11 @@
         const pass = document.getElementById('authPassword').value;
         if (!email || !pass) return alert('Заполните поля');
         if (currentAuthMode === 'login') login(email, pass);
-        else register(email, pass);
+        else {
+            const username = document.getElementById('authUsername').value;
+            if (!username) return alert('Введите логин');
+            register(email, pass, username);
+        }
     };
 
     async function likeTrack(trackId) {
@@ -641,7 +724,7 @@
         }
     }
 
-    // ========== КОММЕНТАРИИ (ИСПРАВЛЕННЫЕ) ==========
+    // ========== КОММЕНТАРИИ (С ЗАМЕНОЙ ПОЧТЫ АДМИНА НА "Админ" КРАСНЫМ) ==========
     async function loadComments() {
         const container = document.getElementById('commentsList');
         if (!container) return;
@@ -667,20 +750,27 @@
         let html = '';
         for (const comment of data) {
             let authorName = 'Гость';
+            let authorColor = '';
             if (comment.user_id) {
                 const { data: profile } = await supabaseClient
                     .from('profiles')
-                    .select('email')
+                    .select('email, role, username')
                     .eq('id', comment.user_id)
                     .single();
-                if (profile?.email) authorName = profile.email;
+                if (profile) {
+                    if (profile.role === 'admin') {
+                        authorName = '<span style="color: #ef4444; font-weight: bold;">Админ</span>';
+                    } else {
+                        authorName = profile.username || profile.email;
+                    }
+                }
             }
             
             html += `
                 <div class="comment">
                     <div class="comment-content">
                         <div>
-                            <span class="comment-author">💬 ${escapeHtml(authorName)}</span>
+                            <span class="comment-author">💬 ${authorName}</span>
                             <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
                         </div>
                         <div class="comment-text">${escapeHtml(comment.text)}</div>
