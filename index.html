@@ -75,6 +75,16 @@
             text-decoration: underline;
         }
         
+        .mobile-ad {
+            display: none;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 0.8rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
         .main-content {
             flex: 1;
             min-width: 0;
@@ -102,7 +112,7 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.5rem;
         }
         .avatar {
             width: 48px;
@@ -135,11 +145,11 @@
         .social-header {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.5rem;
         }
         .social-icon {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -158,6 +168,68 @@
         }
         .social-icon:hover {
             transform: scale(1.08);
+        }
+        
+        .menu-icon {
+            width: 30px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .menu-icon span {
+            height: 3px;
+            background: white;
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+        
+        .author-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 2001;
+            transition: left 0.3s ease;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+        }
+        .author-menu.open {
+            left: 0;
+        }
+        .author-menu .close-menu {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+        }
+        .author-list {
+            margin-top: 2rem;
+        }
+        .author-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #2b2b4f;
+        }
+        .author-name {
+            color: white;
+            font-weight: 600;
         }
         
         .user-info {
@@ -231,9 +303,6 @@
             align-items: flex-start;
             gap: 0.8rem;
         }
-        .track-card:hover {
-            background: rgba(0, 0, 0, 0.8);
-        }
         
         .track-left {
             display: flex;
@@ -302,7 +371,7 @@
         }
         
         .volume-control {
-            display: none;
+            display: flex;
             align-items: center;
             gap: 0.4rem;
             margin-bottom: 0.5rem;
@@ -332,7 +401,6 @@
         }
         
         .progress-control {
-            display: none;
             margin-bottom: 0.5rem;
         }
         .progress-control.visible {
@@ -341,14 +409,32 @@
         .progress-bar-container {
             background: rgba(255,255,255,0.2);
             border-radius: 1rem;
-            height: 4px;
+            height: 6px;
             cursor: pointer;
+            position: relative;
         }
         .progress-fill {
             background: linear-gradient(90deg, #3b82f6, #a855f7);
             border-radius: 1rem;
             height: 100%;
             width: 0%;
+            position: relative;
+        }
+        /* Круглая ручка для десктопа */
+        @media (min-width: 769px) {
+            .progress-fill::after {
+                content: '';
+                position: absolute;
+                right: -6px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 12px;
+                height: 12px;
+                background: white;
+                border-radius: 50%;
+                box-shadow: 0 0 4px rgba(0,0,0,0.3);
+                cursor: pointer;
+            }
         }
         
         .likes-row {
@@ -369,10 +455,10 @@
             font-size: 0.75rem;
             font-weight: 500;
             transition: all 0.2s ease;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
+            text-decoration: none;
         }
         .download-track-btn:hover {
             background: #10b981;
@@ -416,6 +502,17 @@
         .delete-track-card:hover {
             background: rgba(239, 68, 68, 0.8);
             color: white;
+        }
+        
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #cbd5e1;
+            margin-top: 0.2rem;
+        }
+        .current-time, .duration {
+            font-family: monospace;
         }
         
         .comments-section {
@@ -563,9 +660,6 @@
             transition: all 0.2s ease;
             color: #888;
         }
-        .password-toggle:hover {
-            color: #aaa;
-        }
         .password-toggle.active {
             color: white;
             text-shadow: 0 0 4px #3b82f6;
@@ -602,18 +696,13 @@
             color: #ef4444;
         }
         
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .site-wrapper { 
-                flex-direction: column; 
-                gap: 0;
-            }
-            .ad-sidebar {
-                display: none;
-            }
-            .main-content {
-                max-width: 100%;
-            }
+            .site-wrapper { flex-direction: column; gap: 0; }
+            .ad-sidebar { display: none; }
+            .mobile-ad { display: block; }
+            .main-content { max-width: 100%; }
             .sticky-header { top: 10px; }
             .glass-header {
                 padding: 0.6rem 1rem;
@@ -626,7 +715,9 @@
             h1 { font-size: 1rem; }
             .stats { font-size: 0.6rem; }
             .user-info { justify-content: center; font-size: 0.7rem; }
-            .social-header { justify-content: center; }
+            .social-header { justify-content: center; margin-top: 0.5rem; }
+            
+            .menu-icon { margin: 0 auto; }
             
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
@@ -635,7 +726,16 @@
             
             .track-title { font-size: 0.9rem; }
             .track-artist { font-size: 0.7rem; }
-            .volume-slider { width: 80px; }
+            
+            /* Скрываем громкость на телефонах */
+            .volume-control { display: none !important; }
+            
+            /* Увеличиваем прогресс-бар для пальцев */
+            .progress-bar-container { height: 8px; }
+            
+            /* Кнопка скачивания — только иконка */
+            .download-track-btn span { display: none; }
+            .download-track-btn { padding: 0.3rem; font-size: 1rem; }
             
             .admin-panel input { width: 100%; margin: 0.5rem 0; }
             .admin-panel button { width: 100%; }
@@ -648,10 +748,6 @@
                 padding: 0.3rem 0.8rem;
                 font-size: 0.7rem;
             }
-            .download-track-btn {
-                padding: 0.2rem 0.6rem;
-                font-size: 0.65rem;
-            }
         }
     </style>
 </head>
@@ -663,6 +759,7 @@
 <div class="overlay"></div>
 
 <div class="site-wrapper">
+    <!-- Боковая реклама (десктоп) -->
     <div class="ad-sidebar">
         <div class="ad-block">
             <p>📢 Здесь могла быть ваша реклама</p>
@@ -696,7 +793,16 @@
                         <button id="logoutBtn" class="auth-btn" style="display: none; background: #ef4444;">Выйти</button>
                     </div>
                 </div>
+                <div class="menu-icon" id="menuIcon">
+                    <span></span><span></span><span></span>
+                </div>
             </div>
+        </div>
+        
+        <!-- Мобильная реклама -->
+        <div class="mobile-ad ad-block">
+            <p>📢 Здесь могла быть ваша реклама</p>
+            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
         </div>
         
         <div id="adminPanel" class="admin-panel" style="display: none;">
@@ -719,10 +825,23 @@
         </div>
     </div>
     
+    <!-- Боковая реклама (десктоп) -->
     <div class="ad-sidebar">
         <div class="ad-block">
             <p>📢 Здесь могла быть ваша реклама</p>
             <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
+        </div>
+    </div>
+</div>
+
+<!-- Меню авторов (бургер) -->
+<div id="authorMenu" class="author-menu">
+    <div class="close-menu" id="closeMenu">✕</div>
+    <h3 style="color: white; margin-bottom: 1rem;">🎤 Исполнители</h3>
+    <div id="authorList" class="author-list">
+        <div class="author-item">
+            <div class="author-avatar"></div>
+            <div class="author-name">Скоро будут добавлены...</div>
         </div>
     </div>
 </div>
@@ -738,14 +857,11 @@
     <div class="modal-content">
         <h2 id="modalTitle">Вход</h2>
         <input type="email" id="authEmail" placeholder="Email">
-        
         <div class="password-wrapper">
             <input type="password" id="authPassword" placeholder="Пароль">
             <span class="password-toggle" onclick="togglePassword('authPassword', this)">👁️</span>
         </div>
-        
         <input type="text" id="authUsername" placeholder="Логин (только латиница, 3-8 символов)" style="display: none;">
-        
         <button id="submitAuthBtn">Войти</button>
         <button class="close" onclick="closeModal()">Закрыть</button>
     </div>
@@ -763,12 +879,7 @@
     let currentAuthMode = 'login';
 
     // ========== ЦЕНЗУРА ==========
-    const bannedWords = [
-        'хуй', 'xуй', 'хуя', 'хую', 'хуём', 'хуе', 'пизда', 'пизду', 'пизде', 'блядь', 'бля', 'блять',
-        'ебать', 'ебаный', 'ебанный', 'еблан', 'пидор', 'пидорас', 'гандон', 'мудак', 'сука', 'сучка',
-        'шлюха', 'курва', 'нахуй', 'похуй', 'долбоеб', 'дебил', 'идиот', 'fuck', 'shit', 'bitch', 'asshole', 'cunt', 'dick', 'pussy', 'whore', 'slut'
-    ];
-    
+    const bannedWords = ['хуй', 'пизда', 'бля', 'ебать', 'пидор', 'сука', 'шлюха', 'fuck', 'shit', 'bitch'];
     function containsBadWords(text) {
         if (!text) return false;
         let lowerText = text.toLowerCase();
@@ -812,6 +923,27 @@
         }
     }
 
+    // ========== СКАЧИВАНИЕ С НОРМАЛЬНЫМ ИМЕНЕМ ==========
+    async function downloadTrack(button) {
+        const url = button.dataset.url;
+        const fileName = button.dataset.title + '.mp3';
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error('Ошибка скачивания:', error);
+            alert('Не удалось скачать файл');
+        }
+    }
+
     function showLoggedOutUI() {
         document.getElementById('userEmail').innerText = 'Гость';
         document.getElementById('loginBtn').style.display = 'block';
@@ -819,7 +951,6 @@
         document.getElementById('logoutBtn').style.display = 'none';
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = 'none';
-        
         const panelName = document.getElementById('userPanelName');
         const panelRole = document.getElementById('userPanelRole');
         if (panelName) panelName.innerText = 'Гость';
@@ -831,7 +962,6 @@
 
     async function checkAuth() {
         const { data: { user }, error } = await supabaseClient.auth.getUser();
-        
         if (error || !user) {
             currentUser = null;
             isAdmin = false;
@@ -840,13 +970,11 @@
             loadComments();
             return;
         }
-        
         const { data: profile, error: profileError } = await supabaseClient
             .from('profiles')
             .select('role, username')
             .eq('id', user.id)
             .maybeSingle();
-        
         if (profileError || !profile) {
             await supabaseClient.auth.signOut();
             currentUser = null;
@@ -856,19 +984,15 @@
             loadComments();
             return;
         }
-        
         currentUser = user;
         isAdmin = profile.role === 'admin' || profile.role === 'tech_admin';
         const displayName = profile.username || 'Пользователь';
-        
         document.getElementById('userEmail').innerText = displayName;
         document.getElementById('loginBtn').style.display = 'none';
         document.getElementById('registerBtn').style.display = 'none';
         document.getElementById('logoutBtn').style.display = 'block';
-        
         const adminPanel = document.getElementById('adminPanel');
         if (adminPanel) adminPanel.style.display = isAdmin ? 'block' : 'none';
-        
         const panelName = document.getElementById('userPanelName');
         const panelRole = document.getElementById('userPanelRole');
         if (panelName) panelName.innerText = displayName;
@@ -881,95 +1005,40 @@
                 panelRole.classList.remove('admin');
             }
         }
-        
         loadTracks();
         loadComments();
     }
 
     async function login(email, password) {
         const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        
         if (error) {
-            if (error.message.includes('Invalid login credentials')) {
-                alert('❌ Такой учётной записи нет. Проверьте email или пароль.');
-            } else {
-                alert('Ошибка входа: ' + error.message);
-            }
+            alert(error.message.includes('Invalid login credentials') ? '❌ Такой учётной записи нет' : 'Ошибка входа: ' + error.message);
             return;
         }
-        
         closeModal();
         checkAuth();
     }
 
     async function register(email, password, username) {
-        if (!username || username.trim() === '') {
-            alert('❌ Логин обязателен для заполнения');
-            return;
-        }
-        
-        if (!isValidUsername(username)) {
-            alert('❌ Логин должен содержать только латинские буквы (A-Z) и быть длиной от 3 до 8 символов');
-            return;
-        }
-        
-        if (containsBadWords(username)) {
-            alert('❌ Логин содержит недопустимые слова. Выберите другой.');
-            return;
-        }
-        
-        const { data: existing } = await supabaseClient
-            .from('profiles')
-            .select('username')
-            .eq('username', username)
-            .maybeSingle();
-        
-        if (existing) {
-            alert('❌ Этот логин уже занят. Придумайте другой.');
-            return;
-        }
-        
-        const { data, error } = await supabaseClient.auth.signUp({ 
-            email, 
-            password,
-            options: { data: { username: username } }
-        });
-        
-        if (error) {
-            if (error.message.includes('User already registered')) {
-                alert('❌ Пользователь с таким email уже зарегистрирован');
-            } else {
-                alert('Ошибка регистрации: ' + error.message);
-            }
-            return;
-        }
-        
+        if (!username || username.trim() === '') return alert('❌ Логин обязателен');
+        if (!isValidUsername(username)) return alert('❌ Логин только латиница, 3-8 символов');
+        if (containsBadWords(username)) return alert('❌ Логин содержит недопустимые слова');
+        const { data: existing } = await supabaseClient.from('profiles').select('username').eq('username', username).maybeSingle();
+        if (existing) return alert('❌ Логин уже занят');
+        const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { username } } });
+        if (error) return alert(error.message.includes('User already registered') ? '❌ Email уже зарегистрирован' : 'Ошибка: ' + error.message);
         if (data.user) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const { error: updateError } = await supabaseClient
-                .from('profiles')
-                .update({ username: username })
-                .eq('id', data.user.id);
-            
-            if (updateError && updateError.message.includes('no rows')) {
-                await supabaseClient.from('profiles').insert({
-                    id: data.user.id,
-                    email: email,
-                    username: username,
-                    role: 'user'
-                });
+            await new Promise(r => setTimeout(r, 1000));
+            const { error: updateError } = await supabaseClient.from('profiles').update({ username }).eq('id', data.user.id);
+            if (updateError?.message.includes('no rows')) {
+                await supabaseClient.from('profiles').insert({ id: data.user.id, email, username, role: 'user' });
             }
         }
-        
         alert('✅ Регистрация успешна! Теперь войдите.');
         toggleToLogin();
     }
 
-    function logout() {
-        supabaseClient.auth.signOut();
-        checkAuth();
-    }
+    function logout() { supabaseClient.auth.signOut(); checkAuth(); }
 
     const modal = document.getElementById('authModal');
     function openModal() { modal.style.display = 'flex'; }
@@ -988,20 +1057,15 @@
         document.getElementById('authUsername').style.display = 'none';
         openModal();
     };
-
     document.getElementById('registerBtn').onclick = () => {
         currentAuthMode = 'register';
         document.getElementById('modalTitle').innerText = 'Регистрация';
         document.getElementById('submitAuthBtn').innerText = 'Зарегистрироваться';
         document.getElementById('authUsername').style.display = 'block';
-        document.getElementById('authUsername').placeholder = 'Логин (только латиница, 3-8 символов)';
+        document.getElementById('authUsername').placeholder = 'Логин (3-8 латиница)';
         openModal();
     };
-
-    document.getElementById('logoutBtn').onclick = () => {
-        logout();
-    };
-
+    document.getElementById('logoutBtn').onclick = () => logout();
     document.getElementById('submitAuthBtn').onclick = () => {
         const email = document.getElementById('authEmail').value;
         const pass = document.getElementById('authPassword').value;
@@ -1011,139 +1075,54 @@
         else register(email, pass, username);
     };
 
+    // ========== ЛАЙКИ ==========
     async function likeTrack(trackId) {
-        console.log('Лайк трека:', trackId);
         const fingerprint = await getDeviceFingerprint();
         const userId = currentUser?.id || null;
-        
-        let query = supabaseClient
-            .from('likes')
-            .select('id')
-            .eq('track_id', trackId);
-        
-        if (userId) {
-            query = query.eq('user_id', userId);
-        } else {
-            query = query.eq('device_fingerprint', fingerprint);
-        }
-        
+        let query = supabaseClient.from('likes').select('id').eq('track_id', trackId);
+        if (userId) query = query.eq('user_id', userId);
+        else query = query.eq('device_fingerprint', fingerprint);
         const { data: existing } = await query.maybeSingle();
-        
         if (existing) {
-            const { error } = await supabaseClient
-                .from('likes')
-                .delete()
-                .eq('id', existing.id);
-            
-            if (error) {
-                console.error('Ошибка удаления лайка:', error);
-                alert('Ошибка: ' + error.message);
-            } else {
-                console.log('Лайк удалён');
-                loadTracks();
-            }
+            await supabaseClient.from('likes').delete().eq('id', existing.id);
         } else {
-            const { error } = await supabaseClient.from('likes').insert({
-                track_id: trackId,
-                user_id: userId,
-                device_fingerprint: userId ? null : fingerprint
-            });
-            
-            if (error) {
-                console.error('Ошибка добавления лайка:', error);
-                alert('Ошибка: ' + error.message);
-            } else {
-                console.log('Лайк добавлен');
-                loadTracks();
-            }
+            await supabaseClient.from('likes').insert({ track_id: trackId, user_id: userId, device_fingerprint: userId ? null : fingerprint });
         }
+        loadTracks();
     }
 
     // ========== КОММЕНТАРИИ ==========
     async function loadComments() {
         const container = document.getElementById('commentsList');
-        if (!container) return;
-        
-        const { data: comments, error: commentsError } = await supabaseClient
-            .from('comments')
-            .select('id, text, created_at, user_id')
-            .order('created_at', { ascending: false });
-        
-        if (commentsError) {
-            console.error('Ошибка загрузки комментариев:', commentsError);
-            container.innerHTML = '';
-            return;
-        }
-        
-        if (!comments || comments.length === 0) {
-            container.innerHTML = '';
-            return;
-        }
-        
+        const { data: comments, error } = await supabaseClient.from('comments').select('id, text, created_at, user_id').order('created_at', { ascending: false });
+        if (error || !comments?.length) { container.innerHTML = ''; return; }
         const userIds = [...new Set(comments.map(c => c.user_id).filter(id => id))];
-        
         let profilesMap = {};
-        if (userIds.length > 0) {
-            const { data: profiles, error: profilesError } = await supabaseClient
-                .from('profiles')
-                .select('id, username, role')
-                .in('id', userIds);
-            
-            if (!profilesError && profiles) {
-                profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
-            }
+        if (userIds.length) {
+            const { data: profiles } = await supabaseClient.from('profiles').select('id, username, role').in('id', userIds);
+            if (profiles) profilesMap = Object.fromEntries(profiles.map(p => [p.id, p]));
         }
-        
         let html = '';
         for (const comment of comments) {
             let authorName = 'Гость';
             const profile = profilesMap[comment.user_id];
-            
             if (profile) {
-                if (profile.role === 'admin' || profile.role === 'tech_admin') {
-                    authorName = '<span style="color: #ef4444; font-weight: bold;">Тех-Админ</span>';
-                } else if (profile.username) {
-                    authorName = profile.username;
-                } else {
-                    authorName = 'Пользователь';
-                }
+                if (profile.role === 'admin' || profile.role === 'tech_admin') authorName = '<span style="color:#ef4444;font-weight:bold;">Тех-Админ</span>';
+                else authorName = profile.username || 'Пользователь';
             }
-            
-            html += `
-                <div class="comment">
-                    <div class="comment-content">
-                        <div>
-                            <span class="comment-author">💬 ${authorName}</span>
-                            <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
-                        </div>
-                        <div class="comment-text">${escapeHtml(comment.text)}</div>
-                    </div>
-                    ${isAdmin ? `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">🗑️</button>` : ''}
-                </div>
-            `;
+            html += `<div class="comment"><div class="comment-content"><div><span class="comment-author">💬 ${authorName}</span> <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span></div><div class="comment-text">${escapeHtml(comment.text)}</div></div>${isAdmin ? `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">🗑️</button>` : ''}</div>`;
         }
         container.innerHTML = html;
     }
 
     async function addComment(text) {
-        if (!currentUser) return alert('Войдите в аккаунт, чтобы комментировать');
+        if (!currentUser) return alert('Войдите в аккаунт');
         if (!text.trim()) return alert('Напишите что-нибудь');
         if (text.length > 250) return alert('Максимум 250 символов');
-        
-        if (containsBadWords(text)) {
-            alert('❌ Комментарий содержит недопустимые слова. Пожалуйста, перепишите его.');
-            return;
-        }
-        
-        const { data, error } = await supabaseClient.from('comments').insert({
-            text: text.trim(),
-            user_id: currentUser.id
-        }).select();
-        
-        if (error) {
-            console.error('Ошибка добавления комментария:', error);
-            alert('Ошибка: ' + error.message);
-        } else {
+        if (containsBadWords(text)) return alert('❌ Комментарий содержит недопустимые слова');
+        const { error } = await supabaseClient.from('comments').insert({ text: text.trim(), user_id: currentUser.id });
+        if (error) alert('Ошибка: ' + error.message);
+        else {
             document.getElementById('commentInput').value = '';
             document.getElementById('charCounter').innerText = '0 / 250';
             alert('✅ Комментарий добавлен');
@@ -1166,10 +1145,9 @@
         const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
         if (error || !data?.length) {
             container.innerHTML = '<div class="empty-message">🎧 Пока нет треков</div>';
-            updateStats(); 
+            updateStats();
             return;
         }
-        
         const fingerprint = await getDeviceFingerprint();
         let userLikes = [];
         if (currentUser) {
@@ -1179,25 +1157,17 @@
             const { data: likes } = await supabaseClient.from('likes').select('track_id').eq('device_fingerprint', fingerprint);
             userLikes = likes.map(l => l.track_id);
         }
-        
         let html = '';
         for (let i = 0; i < data.length; i++) {
             const track = data[i];
             const isLiked = userLikes.includes(track.id);
-            
-            const { count: likesCount } = await supabaseClient
-                .from('likes')
-                .select('*', { count: 'exact', head: true })
-                .eq('track_id', track.id);
-            
+            const { count: likesCount } = await supabaseClient.from('likes').select('*', { count: 'exact', head: true }).eq('track_id', track.id);
             html += `
                 <div class="track-card" data-track-id="${track.id}" data-index="${i}">
                     <div class="track-left">
                         <div class="cover-container">
-                            <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="cover" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
-                            <div class="play-overlay" data-play-index="${i}">
-                                <span>▶</span>
-                            </div>
+                            <img class="track-cover" src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" onerror="this.src='https://placehold.co/70x70/2b2b4f/white?text=🎵'">
+                            <div class="play-overlay" data-play-index="${i}"><span>▶</span></div>
                         </div>
                         <div class="track-duration" id="duration-${track.id}">--:--</div>
                     </div>
@@ -1209,82 +1179,71 @@
                             <input type="range" class="volume-slider" min="0" max="100" value="70">
                         </div>
                         <div class="progress-control" id="progress-${track.id}">
-                            <div class="progress-bar-container">
-                                <div class="progress-fill"></div>
-                            </div>
+                            <div class="progress-bar-container"><div class="progress-fill"></div></div>
+                        </div>
+                        <div class="time-info">
+                            <span class="current-time" id="current-time-${track.id}">00:00</span>
+                            <span class="duration" id="duration-time-${track.id}">00:00</span>
                         </div>
                         <div class="likes-row">
-                            <a href="${track.file_url}" download="${escapeHtml(track.title)}.mp3" class="download-track-btn">⬇️ Скачать</a>
+                            <button class="download-track-btn" data-url="${track.file_url}" data-title="${escapeHtml(track.title)}" onclick="downloadTrack(this)"><span>⬇️</span> <span>Скачать</span></button>
                             <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${likesCount || 0}</button>
-                            ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
+                            ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️</button>` : ''}
                         </div>
                     </div>
-                    <audio style="display:none;" id="audio-${track.id}" preload="metadata">
-                        <source src="${track.file_url}" type="audio/mpeg">
-                    </audio>
+                    <audio style="display:none;" id="audio-${track.id}" preload="metadata"><source src="${track.file_url}" type="audio/mpeg"></audio>
                 </div>
             `;
         }
         container.innerHTML = html;
-        
-        for (let i = 0; i < data.length; i++) {
-            initPlayerForTrack(data[i].id, i);
-        }
-        
-        document.querySelectorAll('.like-btn-card').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                likeTrack(parseInt(btn.dataset.id));
-            };
-        });
-        
+        for (let i = 0; i < data.length; i++) initPlayerForTrack(data[i].id, i);
+        document.querySelectorAll('.like-btn-card').forEach(btn => btn.onclick = () => likeTrack(parseInt(btn.dataset.id)));
         updateStats();
     }
-    
+
     function initPlayerForTrack(trackId, index) {
         const audio = document.getElementById(`audio-${trackId}`);
         const playBtn = document.querySelector(`.play-overlay[data-play-index="${index}"]`);
         const durationSpan = document.getElementById(`duration-${trackId}`);
+        const currentSpan = document.getElementById(`current-time-${trackId}`);
+        const durationTimeSpan = document.getElementById(`duration-time-${trackId}`);
         const volumeControl = document.getElementById(`volume-${trackId}`);
-        const progressControl = document.getElementById(`progress-${trackId}`);
-        const progressFill = progressControl?.querySelector('.progress-fill');
-        const progressBar = progressControl?.querySelector('.progress-bar-container');
+        const progressFill = document.querySelector(`.progress-fill`);
+        const progressBar = document.querySelector(`.progress-bar-container`);
         const volumeSlider = volumeControl?.querySelector('.volume-slider');
         const volumeIcon = volumeControl?.querySelector('.volume-icon');
-        
-        if (!audio || !playBtn) return;
-        
         let isPlaying = false;
-        
+
         audio.addEventListener('loadedmetadata', () => {
             if (durationSpan && !isNaN(audio.duration)) {
                 const mins = Math.floor(audio.duration / 60);
                 const secs = Math.floor(audio.duration % 60);
                 durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                if (durationTimeSpan) durationTimeSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
             }
         });
-        
-        audio.addEventListener('timeupdate', () => {
-            if (isPlaying && progressFill && audio.duration) {
+
+        function updateTimeDisplay() {
+            if (currentSpan && audio.duration) {
+                const currentMins = Math.floor(audio.currentTime / 60);
+                const currentSecs = Math.floor(audio.currentTime % 60);
+                currentSpan.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
                 const percent = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = `${percent}%`;
+                if (progressFill) progressFill.style.width = `${percent}%`;
             }
-        });
-        
-        if (progressBar) {
-            progressBar.addEventListener('click', (e) => {
-                const rect = progressBar.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                audio.currentTime = percent * audio.duration;
-            });
         }
-        
+
+        audio.addEventListener('timeupdate', updateTimeDisplay);
+        if (progressBar) progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        });
         playBtn.addEventListener('click', () => {
             if (isPlaying) {
                 audio.pause();
                 playBtn.innerHTML = '<span>▶</span>';
                 if (volumeControl) volumeControl.classList.remove('visible');
-                if (progressControl) progressControl.classList.remove('visible');
             } else {
                 document.querySelectorAll('audio').forEach(a => {
                     if (a !== audio && !a.paused) {
@@ -1293,26 +1252,20 @@
                         const otherPlayBtn = document.querySelector(`.play-overlay[data-play-index="${idx}"]`);
                         if (otherPlayBtn) otherPlayBtn.innerHTML = '<span>▶</span>';
                         const otherVolume = document.getElementById(`volume-${idx}`);
-                        const otherProgress = document.getElementById(`progress-${idx}`);
                         if (otherVolume) otherVolume.classList.remove('visible');
-                        if (otherProgress) otherProgress.classList.remove('visible');
                     }
                 });
                 audio.play();
                 playBtn.innerHTML = '<span>⏸</span>';
                 if (volumeControl) volumeControl.classList.add('visible');
-                if (progressControl) progressControl.classList.add('visible');
             }
             isPlaying = !isPlaying;
         });
-        
         audio.addEventListener('ended', () => {
             playBtn.innerHTML = '<span>▶</span>';
             if (volumeControl) volumeControl.classList.remove('visible');
-            if (progressControl) progressControl.classList.remove('visible');
             isPlaying = false;
         });
-        
         if (volumeSlider) {
             volumeSlider.addEventListener('input', (e) => {
                 audio.volume = e.target.value / 100;
@@ -1337,12 +1290,7 @@
     async function addTrack(title, artist, url) {
         if (!isAdmin) return alert('⛔ Только админ');
         if (!title.trim() || !artist.trim() || !url.trim()) return alert('Заполните все поля');
-        const { error } = await supabaseClient.from('tracks').insert([{ 
-            title: title.trim(), 
-            artist: artist.trim(),
-            file_url: url.trim(), 
-            likes: 0 
-        }]);
+        const { error } = await supabaseClient.from('tracks').insert([{ title: title.trim(), artist: artist.trim(), file_url: url.trim(), likes: 0 }]);
         if (error) alert('Ошибка: ' + error.message);
         else {
             alert('✅ Трек добавлен');
@@ -1359,10 +1307,8 @@
         document.getElementById('statsPanel').innerHTML = `📊 ${tracksCount || 0} треков · 💬 ${commentsCount || 0} комментариев`;
     }
 
-    function escapeHtml(str) { 
-        if (!str) return ''; 
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
-    }
+    function escapeHtml(str) { return str ? str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
+    function formatTime(sec) { if (isNaN(sec)) return '00:00'; const m = Math.floor(sec/60); const s = Math.floor(sec%60); return `${m}:${s.toString().padStart(2,'0')}`; }
 
     document.getElementById('addTrackBtn').onclick = () => addTrack(
         document.getElementById('trackTitle').value,
@@ -1370,13 +1316,20 @@
         document.getElementById('trackUrl').value
     );
     document.getElementById('sendCommentBtn').onclick = () => addComment(document.getElementById('commentInput').value);
-    document.getElementById('commentInput').addEventListener('input', function() { 
-        const len = this.value.length; 
-        const counter = document.getElementById('charCounter'); 
-        counter.innerText = `${len} / 250`; 
-        if (len > 250) counter.classList.add('warning'); 
-        else counter.classList.remove('warning'); 
+    document.getElementById('commentInput').addEventListener('input', function() {
+        const len = this.value.length;
+        const counter = document.getElementById('charCounter');
+        counter.innerText = `${len} / 250`;
+        if (len > 250) counter.classList.add('warning');
+        else counter.classList.remove('warning');
     });
+
+    // Бургер-меню
+    const menuIcon = document.getElementById('menuIcon');
+    const authorMenu = document.getElementById('authorMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    if (menuIcon) menuIcon.onclick = () => authorMenu.classList.add('open');
+    if (closeMenu) closeMenu.onclick = () => authorMenu.classList.remove('open');
 
     checkAuth();
 </script>
