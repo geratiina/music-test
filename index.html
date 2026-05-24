@@ -146,21 +146,15 @@
             justify-content: center;
             transition: all 0.25s ease;
             text-decoration: none;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.2);
             font-weight: 600;
             font-size: 0.9rem;
         }
         .social-icon.vk {
             background: #0077FF;
-            border-color: #0077FF;
             color: white;
         }
         .social-icon.tg {
             background: #26A5E4;
-            border-color: #26A5E4;
-            color: white;
         }
         .social-icon:hover {
             transform: scale(1.08);
@@ -363,6 +357,26 @@
             justify-content: flex-end;
             gap: 0.5rem;
             margin-top: 0.3rem;
+            flex-wrap: wrap;
+        }
+        .download-track-btn {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #10b981;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .download-track-btn:hover {
+            background: #10b981;
+            color: white;
         }
         .like-btn-card {
             background: rgba(255, 255, 255, 0.1);
@@ -557,7 +571,6 @@
             text-shadow: 0 0 4px #3b82f6;
         }
         
-        /* Нижняя панель с пользователем */
         .user-panel {
             position: fixed;
             bottom: 20px;
@@ -636,6 +649,10 @@
                 padding: 0.3rem 0.8rem;
                 font-size: 0.7rem;
             }
+            .download-track-btn {
+                padding: 0.2rem 0.6rem;
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -666,7 +683,11 @@
                 </div>
                 <div class="social-header">
                     <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon vk">VK</a>
-                    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon tg">📱</a>
+                    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon tg">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z" fill="white"/>
+                        </svg>
+                    </a>
                 </div>
                 <div class="user-info" id="userInfo">
                     <span id="userEmail">Гость</span>
@@ -707,7 +728,6 @@
     </div>
 </div>
 
-<!-- Нижняя панель с пользователем -->
 <div class="user-panel" id="userPanel">
     <div class="user-panel-content">
         <span id="userPanelName">Гость</span>
@@ -1020,7 +1040,6 @@
         }
     }
 
-    // ========== ИСПРАВЛЕННЫЕ КОММЕНТАРИИ ==========
     async function loadComments() {
         const container = document.getElementById('commentsList');
         if (!container) return;
@@ -1174,6 +1193,7 @@
                             </div>
                         </div>
                         <div class="likes-row">
+                            <a href="${track.file_url}" download="${escapeHtml(track.title)}.mp3" class="download-track-btn">⬇️ Скачать</a>
                             <button class="like-btn-card ${isLiked ? 'liked' : ''}" data-id="${track.id}">👍 ${likesCount || 0}</button>
                             ${isAdmin ? `<button class="delete-track-card" onclick="deleteTrack(${track.id})">🗑️ Удалить</button>` : ''}
                         </div>
