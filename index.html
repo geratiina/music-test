@@ -165,7 +165,7 @@
             padding: 0.8rem 1.5rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -214,34 +214,6 @@
             display: inline-block;
         }
         
-        .social-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.25s ease;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .social-icon.vk {
-            background: #0077FF;
-            color: white;
-        }
-        .social-icon.tg {
-            background: #26A5E4;
-        }
-        .social-icon:hover {
-            transform: scale(1.08);
-        }
-        
         /* МОБИЛЬНЫЕ СОЦ. КНОПКИ (под шапкой, без подложки) */
         .mobile-social-bar {
             display: none;
@@ -250,24 +222,34 @@
             margin: 0 0 1rem 0;
             padding: 0;
         }
-        .mobile-social-bar .social-icon-small {
+        .social-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            transition: all 0.2s ease;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 2rem;
             text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
         }
-        .mobile-social-bar .social-icon-small.vk {
+        .social-btn.vk {
             background: #0077FF;
+            color: white;
         }
-        .mobile-social-bar .social-icon-small.tg {
+        .social-btn.tg {
             background: #26A5E4;
+            color: white;
         }
-        .mobile-social-bar .social-icon-small:hover {
-            transform: scale(1.05);
+        .social-btn:hover {
+            transform: scale(1.02);
+            opacity: 0.95;
+        }
+        .social-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
         }
         
         .author-menu {
@@ -823,8 +805,6 @@
                 display: flex;
             }
             
-            /* Шапка остается как есть, без изменений */
-            
             .track-left { width: 60px; }
             .cover-container { width: 60px; height: 60px; }
             .play-overlay { width: 28px; height: 28px; }
@@ -904,28 +884,22 @@
                         <div class="stats" id="statsPanel">📊 загрузка...</div>
                     </div>
                 </div>
-                <div class="social-header">
-                    <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon vk">VK</a>
-                    <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon tg">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z" fill="white"/>
-                        </svg>
-                    </a>
-                </div>
             </div>
         </div>
         
         <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (под шапкой, без подложки) -->
         <div class="mobile-social-bar">
-            <a href="https://vk.com/mzproect_68" target="_blank" class="social-icon-small vk">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10zM8 9h2.5v6H8V9zm5.5 0H16v3.5c0 .83-.67 1.5-1.5 1.5h-1v-5z"/>
+            <a href="https://vk.com/mzproect_68" target="_blank" class="social-btn vk">
+                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.5 6.3c.1-.4 0-.8-.3-.9-.3-.1-.8-.1-1.2-.1h-2.8c-.7 0-1.1.2-1.3.8 0 0-1.5 4-3.3 6.3-.5.6-.8.8-1.1.8-.2 0-.4-.2-.4-.7V6.8c0-.6-.2-.9-.6-.9h-4c-.3 0-.5.2-.5.5 0 .5.8.6.9 2v4.1c0 .7-.2 1.1-.8 1.1-.5 0-1.1-.5-1.6-1.4L5 6.8c-.2-.4-.4-.6-.8-.6H1.5c-.5 0-.6.3-.6.7 0 .8.8 4.3 3.5 7.2 1.8 2.1 4.3 3.3 6.6 3.3 1.4 0 1.6-.3 1.6-.8v-2.2c0-.6.4-.7.8-.4 1.3.9 2.3 2.5 2.7 3.5.3.8.6 1.2 1.5 1.2h2.8c.8 0 1.3-.4 1.2-1.1-.1-.5-.9-1.9-2.4-3.5-.3-.3-.6-.8-.6-1s.3-.8.6-1.2c.8-1.1 2.8-3.3 3.1-4.4z"/>
                 </svg>
+                VK
             </a>
-            <a href="https://t.me/rn_68a_muz" target="_blank" class="social-icon-small tg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <a href="https://t.me/rn_68a_muz" target="_blank" class="social-btn tg">
+                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z"/>
                 </svg>
+                Telegram
             </a>
         </div>
         
@@ -970,12 +944,10 @@
     </div>
     
     <div id="artistsList" class="author-list">
-        <!-- Андрей Тришин – убрана надпись АБТ -->
         <div class="author-item" onclick='showSingerCard("Андрей Тришин", "Андрей Тришин - тексты, мелодии, вокал. Участник проекта \"АБТ\". P.S. Выражаю особую благодарность музыкантам из команды \"Проект GK\" за помощь в создании песен и надеюсь на дальнейшее сотрудничество! 👍 Отдельная благодарность Сергею Черемисину (аранжировка, клавиши) и Александру Антонову 🙏🕯 (гитара) за помощь в создании песни \"Мама\", а также за активное участие в создании песни \"Динь-Дон\"!", "https://github.com/geratiina/singers/raw/main/AndrayT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AndrayT.jpg" alt="Андрей Тришин" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Андрей Тришин</div>
         </div>
-        <!-- Алексей Тамарёв – без инициалов -->
         <div class="author-item" onclick='showSingerCard("Алексей Тамарёв", "Алексей Тамарёв - уникальный музыкант, гениальный гитарист, аранжировщик мелодий, композитор. Вокал. Участник проекта \"АБТ\".", "https://github.com/geratiina/singers/raw/main/AlexeyT.jpg", "")'>
             <img class="author-avatar" src="https://github.com/geratiina/singers/raw/main/AlexeyT.jpg" alt="Алексей Тамарёв" onerror="this.src='https://placehold.co/60x60/2b2b4f/white?text=АТ'">
             <div class="author-name">Алексей Тамарёв</div>
@@ -1462,7 +1434,6 @@
         else counter.classList.remove('warning');
     });
 
-    // Управление бургер-меню
     const burgerBtn = document.getElementById('burgerMenuFixed');
     const authorMenuElem = document.getElementById('authorMenu');
     const closeMenuBtn = document.getElementById('closeMenu');
