@@ -37,7 +37,7 @@
             padding: 20px;
         }
         
-        /* БУРГЕР-МЕНЮ (всегда слева, отдельно от шапки) */
+        /* БУРГЕР-МЕНЮ (всегда слева) */
         .burger-menu-fixed {
             position: fixed;
             top: 20px;
@@ -50,6 +50,9 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .burger-menu-fixed:hover {
             background: rgba(0, 0, 0, 0.8);
@@ -67,6 +70,16 @@
             background: white;
             border-radius: 2px;
             transition: 0.2s;
+        }
+        .age-badge-header {
+            background: #ef4444;
+            color: white;
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.4rem;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .auth-buttons-top {
@@ -162,39 +175,30 @@
             background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(12px);
             border-radius: 2rem;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 1.5rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .header-left {
-            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        .age-restriction {
-            background: #ef4444;
-            color: white;
-            font-weight: 800;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.4rem;
-            border-radius: 0.4rem;
-            display: inline-block;
-            line-height: 1;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        
+        /* Аватарка над названием, по центру */
+        .avatar-center {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.3rem;
         }
-        .avatar {
-            width: 48px;
-            height: 48px;
+        .avatar-center .avatar {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255,255,255,0.5);
         }
-        .title-stats {
-            text-align: left;
+        
+        .title-stats-center {
+            text-align: center;
         }
         h1 {
             font-size: 1.2rem;
@@ -212,6 +216,7 @@
             font-size: 0.7rem;
             color: white;
             display: inline-block;
+            margin-top: 0.3rem;
         }
         
         /* МОБИЛЬНЫЕ СОЦ. КНОПКИ (маленькие кружки) */
@@ -772,22 +777,24 @@
             color: #ef4444;
         }
         
-        /* МОБИЛЬНАЯ АДАПТАЦИЯ — симметричный перенос текста в шапке */
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .sticky-header { 
-                margin-top: 55px;
-                text-align: center;
-            }
+            .sticky-header { margin-top: 65px; }
             
             .burger-menu-fixed {
                 top: 10px;
                 left: 10px;
-                padding: 10px 12px;
+                padding: 8px 12px;
+                gap: 6px;
             }
             .burger-menu-fixed .menu-icon {
                 width: 20px;
                 height: 16px;
+            }
+            .age-badge-header {
+                font-size: 0.6rem;
+                padding: 0.15rem 0.4rem;
             }
             
             .auth-buttons-top { 
@@ -795,62 +802,39 @@
                 right: 10px;
             }
             .auth-buttons-top .auth-btn { 
-                padding: 6px 12px; 
-                font-size: 0.75rem; 
+                padding: 5px 10px; 
+                font-size: 0.7rem; 
             }
             
             .site-wrapper { flex-direction: column; gap: 0; }
             .ad-sidebar { display: none; }
             .main-content { max-width: 100%; }
             
-            /* Показываем мобильные соц. кнопки под шапкой */
-            .mobile-social-bar {
-                display: flex;
-            }
-            
-            /* СИММЕТРИЧНАЯ ШАПКА — центрируем всё содержимое */
+            /* Мобильная шапка — аватарка по центру */
             .glass-header {
                 padding: 0.8rem 1rem;
-                justify-content: center;
-                text-align: center;
+            }
+            .avatar-center .avatar {
+                width: 50px;
+                height: 50px;
+            }
+            h1 {
+                font-size: 0.9rem;
+            }
+            .stats {
+                font-size: 0.55rem;
             }
             
-            .header-left {
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                width: 100%;
+            /* Показываем мобильные соц. кнопки под рекламой */
+            .mobile-social-bar {
+                display: flex;
+                margin-top: 0.5rem;
             }
             
-            .title-stats {
-                text-align: center;
-                width: 100%;
-            }
-            
-            .age-restriction { 
-                font-size: 0.6rem; 
-                padding: 0.15rem 0.3rem;
-                display: inline-block;
-            }
-            
-            .avatar { 
-                width: 40px; 
-                height: 40px;
-                display: inline-block;
-            }
-            
-            h1 { 
-                font-size: 0.9rem; 
-                text-align: center;
+            /* Рекламный блок на мобильных */
+            .mobile-ad {
                 display: block;
-                width: 100%;
-            }
-            
-            .stats { 
-                font-size: 0.6rem; 
-                padding: 0.2rem 0.6rem;
-                display: inline-block;
-                margin-top: 0.2rem;
+                margin-bottom: 1rem;
             }
             
             .track-left { width: 60px; }
@@ -900,11 +884,12 @@
 </video>
 <div class="overlay"></div>
 
-<!-- БУРГЕР-МЕНЮ (отдельно, фиксированно слева) -->
+<!-- БУРГЕР-МЕНЮ + возрастное ограничение 16+ (рядом) -->
 <div class="burger-menu-fixed" id="burgerMenuFixed">
     <div class="menu-icon">
         <span></span><span></span><span></span>
     </div>
+    <span class="age-badge-header">16+</span>
 </div>
 
 <div class="auth-buttons-top" id="authButtonsTop">
@@ -924,18 +909,24 @@
     <div class="main-content">
         <div class="sticky-header">
             <div class="glass-header">
-                <div class="header-left">
-                    <div class="age-restriction">16+</div>
+                <!-- Аватарка над названием (по центру) -->
+                <div class="avatar-center">
                     <img src="https://github.com/geratiina/music-supabase/raw/main/avatar.png" alt="avatar" class="avatar" onerror="this.style.display='none'">
-                    <div class="title-stats">
-                        <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
-                        <div class="stats" id="statsPanel">📊 загрузка...</div>
-                    </div>
+                </div>
+                <div class="title-stats-center">
+                    <h1>🎵 МУЗЫКАЛЬНЫЙ ПРОЕКТ — 68</h1>
+                    <div class="stats" id="statsPanel">📊 загрузка...</div>
                 </div>
             </div>
         </div>
         
-        <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (маленькие кружки с иконками) -->
+        <!-- РЕКЛАМНЫЙ БЛОК (сразу под шапкой) -->
+        <div class="mobile-ad ad-block">
+            <p>📢 Здесь могла быть ваша реклама</p>
+            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
+        </div>
+        
+        <!-- МОБИЛЬНЫЕ СОЦИАЛЬНЫЕ КНОПКИ (под рекламой) -->
         <div class="mobile-social-bar">
             <a href="https://vk.com/mzproect_68" target="_blank" class="social-circle vk">
                 <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -947,11 +938,6 @@
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.66-.35-1.02.22-1.61.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.07-.04-.1-.05-.03-.12-.01-.18.02l-3.45 2.18c-.13.08-.26.13-.39.13-.13 0-.26-.05-.36-.12l-1.57-1.05c-.23-.15-.46-.3-.67-.46-.27-.2-.21-.47.05-.68.05-.04.1-.08.16-.11l5.85-2.43c.27-.11.64-.21.91-.21.6 0 .97.39.86 1.04z"/>
                 </svg>
             </a>
-        </div>
-        
-        <div class="mobile-ad ad-block">
-            <p>📢 Здесь могла быть ваша реклама</p>
-            <a href="https://t.me/Geratiina" target="_blank">@Geratiina</a>
         </div>
         
         <div id="adminPanel" class="admin-panel" style="display: none;">
