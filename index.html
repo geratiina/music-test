@@ -772,10 +772,13 @@
             color: #ef4444;
         }
         
-        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ — симметричный перенос текста в шапке */
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .sticky-header { margin-top: 55px; }
+            .sticky-header { 
+                margin-top: 55px;
+                text-align: center;
+            }
             
             .burger-menu-fixed {
                 top: 10px;
@@ -803,6 +806,51 @@
             /* Показываем мобильные соц. кнопки под шапкой */
             .mobile-social-bar {
                 display: flex;
+            }
+            
+            /* СИММЕТРИЧНАЯ ШАПКА — центрируем всё содержимое */
+            .glass-header {
+                padding: 0.8rem 1rem;
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .header-left {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                width: 100%;
+            }
+            
+            .title-stats {
+                text-align: center;
+                width: 100%;
+            }
+            
+            .age-restriction { 
+                font-size: 0.6rem; 
+                padding: 0.15rem 0.3rem;
+                display: inline-block;
+            }
+            
+            .avatar { 
+                width: 40px; 
+                height: 40px;
+                display: inline-block;
+            }
+            
+            h1 { 
+                font-size: 0.9rem; 
+                text-align: center;
+                display: block;
+                width: 100%;
+            }
+            
+            .stats { 
+                font-size: 0.6rem; 
+                padding: 0.2rem 0.6rem;
+                display: inline-block;
+                margin-top: 0.2rem;
             }
             
             .track-left { width: 60px; }
